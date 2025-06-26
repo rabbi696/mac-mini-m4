@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DMCA - Digital Millennium Copyright Act</title>
+    <title>Contact Us - Software Website</title>
     <style>
         body {
             background-color: #212529;
             color: #ffffff;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
         }
+        /* Header Styles */
         header {
             background-color: #333;
             padding: 20px 0;
@@ -28,27 +29,69 @@
         header a:hover {
             text-decoration: underline;
         }
+        /* Container Styles */
         .container {
             width: 80%;
             margin: 50px auto;
-            text-align: left;
-            padding: 20px;
+            text-align: center;
         }
         h1 {
             color: #62a92b;
             font-size: 36px;
             margin-bottom: 30px;
         }
-        p {
-            font-size: 16px;
-            line-height: 1.6;
+        /* Contact Form Styles */
+        .form-container {
+            background-color: #333;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form-container h2 {
+            color: #62a92b;
+            font-size: 28px;
             margin-bottom: 20px;
         }
+        .form-container label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .form-container input,
+        .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+        }
+        .form-container button {
+            background-color: #62a92b;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .form-container button:hover {
+            background-color: #4e8b1f;
+            transform: scale(1.05);
+        }
+        /* Footer Styles */
         footer {
             background-color: #333;
             color: #ffffff;
             padding: 20px 0;
             text-align: center;
+            margin-top: 50px;
         }
         footer a {
             color: #62a92b;
@@ -58,60 +101,6 @@
         footer a:hover {
             text-decoration: underline;
         }
-
-        /* Compact Form Styles */
-        .form-container {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-top: 30px;
-            width: 50%; /* Narrow the form width */
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .form-container h2 {
-            color: #62a92b;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .form-container label {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .form-container input,
-        .form-container textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #444;
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .form-container button {
-            background-color: #62a92b;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .form-container button:hover {
-            background-color: #4e8b1f;
-            transform: scale(1.05);
-        }
-
-        /* Adding space before footer */
         .footer-space {
             margin-bottom: 50px;
         }
@@ -129,41 +118,12 @@
 </header>
 
 <div class="container">
-    <h1>DMCA Takedown Policy</h1>
-
-    <p>[Your Website Name] respects the intellectual property rights of others and aims to comply with the Digital Millennium Copyright Act (DMCA). If you believe that any content on this website infringes your copyright, please follow the steps outlined below to submit a DMCA Takedown Notice.</p>
-
-    <h3>How to File a DMCA Takedown Notice</h3>
-    <p>To file a DMCA takedown notice, you must provide the following information:</p>
-    <ul>
-        <li>Your full name, address, phone number, and email address.</li>
-        <li>A description of the copyrighted work that you claim has been infringed.</li>
-        <li>The URL or location of the infringing content on our website.</li>
-        <li>A statement that you believe in good faith that the content is infringing and that you are the copyright owner or authorized to act on their behalf.</li>
-        <li>A statement, under penalty of perjury, that the information you provided is accurate and that you are the copyright owner or authorized to act on behalf of the owner.</li>
-        <li>Your electronic or physical signature.</li>
-    </ul>
-    <p>Please send your DMCA Takedown Notice to:</p>
-    <p>Email: [your email]</p>
-    <p>Address: [your business address]</p>
-
-    <h3>Counter-Notice</h3>
-    <p>If you believe that content has been removed by mistake or misidentification, you may submit a counter-notice. To do so, please provide:</p>
-    <ul>
-        <li>Your full name, address, phone number, and email address.</li>
-        <li>A description of the content that was removed and the URL where the content appeared before it was removed.</li>
-        <li>A statement under penalty of perjury that you believe the content was removed due to a mistake or misidentification.</li>
-        <li>Your electronic or physical signature.</li>
-    </ul>
-    <p>Send your counter-notice to:</p>
-    <p>Email: [your email]</p>
-
-    <h3>Contact Us</h3>
-    <p>If you have any questions about the DMCA policy or need assistance, please feel free to contact us using the form below:</p>
+    <h1>Contact Us</h1>
+    <p>If you have any questions, concerns, or need further assistance, feel free to reach out to us using the form below. We are here to help!</p>
 
     <!-- Contact Form -->
     <div class="form-container">
-        <h2>Contact Us</h2>
+        <h2>Get in Touch</h2>
         <form action="process_contact.php" method="POST">
             <label for="name">Your Name</label>
             <input type="text" id="name" name="name" required>
