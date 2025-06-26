@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $visitor_email = $_POST['visitor-email']; // Collect the visitor's email
 
     // Email configuration
-    $to = "your-email@example.com"; // Replace with your actual email address
+    $to = "rabbi@solveez.com"; // Replace with your actual email address
     $subject = "New Software Request: $software_name";
     
     // Create the email message content
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Email headers
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
-    $headers .= "From: webmaster@example.com"; // Optional, change to your email
+    $headers .= "From: rabbi@solveez.com"; // Optional, change to your email
 
     // Send the email
     if (mail($to, $subject, $message, $headers)) {
