@@ -1,10 +1,9 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect form data
-    $software_name = $_POST['software-name'];
-    $software_version = $_POST['software-version'];
-    $additional_info = $_POST['additional-info'];
-    $visitor_email = $_POST['visitor-email'];
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $message = $_POST['message'];
 
     // Collect reCAPTCHA response
     $recaptcha_response = $_POST['g-recaptcha-response'];
@@ -37,23 +36,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Please complete the reCAPTCHA.";
     } else {
         // reCAPTCHA verified, process the form
-
-        // You can send the request details via email or store them in a database
-        // Example: Send the software request via email
-
         $to = "rabbi@solveez.com"; // Replace with your email address
-        $subject = "Software Request for $software_name";
-        $email_content = "Software Name: $software_name\n";
-        $email_content .= "Software Version: $software_version\n";
-        $email_content .= "Additional Info: $additional_info\n";
-        $email_content .= "Visitor Email: $visitor_email\n";
-
-        $headers = "From: $visitor_email";
+        $subject = "Contact Us Message from $name";
+        $email_content = "Name: $name\nEmail: $email\nMessage:\n$message\n";
+        $headers = "From: $email";
 
         if (mail($to, $subject, $email_content, $headers)) {
-            echo "Software request sent successfully!";
+            echo "Message sent successfully!";
         } else {
-            echo "Failed to send the software request. Please try again later.";
+            echo "Failed to send the message. Please try again later.";
         }
     }
 }
