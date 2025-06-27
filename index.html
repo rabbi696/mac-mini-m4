@@ -46,14 +46,15 @@
             height: 50px; /* Fixed height */
         }
 
-        /* Create a clipping area for the scrolling text */
+        /* Create a proper scroll area that doesn't show text behind button */
         .scroll-text-wrapper {
             position: absolute;
-            right: 0;
+            left: 140px; /* Start after the button */
             top: 0;
-            width: calc(100% - 140px); /* Leave space for button */
+            right: 0;
             height: 100%;
             overflow: hidden;
+            clip-path: inset(0 0 0 0); /* Creates a clipping boundary */
         }
 
         #noticeBtn {
@@ -80,19 +81,20 @@
         .scroll-text {
             white-space: nowrap;
             display: inline-block;
-            animation: scroll-left 30s linear infinite;
-            width: 100%;
-            position: relative;
-            left: 140px; /* Start from after the button */
+            animation: scroll-left-fixed 30s linear infinite;
+            width: max-content;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        /* Animation for text scroll */
-        @keyframes scroll-left {
+        /* Updated animation that starts from right edge of wrapper */
+        @keyframes scroll-left-fixed {
             0% {
-                transform: translateX(100%);
+                transform: translateY(-50%) translateX(100%);
             }
             100% {
-                transform: translateX(-100%);
+                transform: translateY(-50%) translateX(-100%);
             }
         }
 
