@@ -115,7 +115,7 @@ $result_contact_messages = $conn->query($sql_contact_messages);
                         echo "<td>" . $row["software_version"] . "</td>";
                         echo "<td>" . $row["visitor_email"] . "</td>";
                         echo "<td>" . $row["additional_info"] . "</td>";
-                        echo "<td>" . $row["submitted_at"] . "</td>";
+                        echo "<td>" . $row["created_at"] . "</td>";
                         echo "</tr>";
                     }
                 } else {
@@ -154,71 +154,4 @@ $result_contact_messages = $conn->query($sql_contact_messages);
             <tbody>
                 <?php
                 if ($result_contact_messages->num_rows > 0) {
-                    while ($row = $result_contact_messages->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row["id"] . "</td>";
-                        echo "<td>" . $row["name"] . "</td>";
-                        echo "<td>" . $row["email"] . "</td>";
-                        echo "<td>" . $row["message"] . "</td>";
-                        echo "<td>" . $row["date"] . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='5'>No contact messages found</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Logout Button -->
-    <div style="text-align: center;">
-        <a href="logout.php" class="button">Logout</a>
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#addSoftwareForm").submit(function(e) {
-            e.preventDefault();
-            
-            var softwareName = $("#software_name").val();
-            var softwareVersion = $("#software_version").val();
-            var downloadLink = $("#download_link").val();
-
-            $.ajax({
-                url: 'process_add_software.php',
-                type: 'POST',
-                data: {
-                    software_name: softwareName,
-                    software_version: softwareVersion,
-                    download_link: downloadLink
-                },
-                success: function(response) {
-                    var data = JSON.parse(response);
-                    if (data.status === "success") {
-                        $("#responseMessage").css("color", "green").text(data.message);
-                        $("#software_name").val('');
-                        $("#software_version").val('');
-                        $("#download_link").val('');
-                        var newSoftwareRow = `<tr>
-                            <td>${data.id}</td>
-                            <td>${softwareName}</td>
-                            <td>${softwareVersion}</td>
-                            <td>${data.email}</td>
-                            <td>${data.info}</td>
-                            <td>${data.date}</td>
-                        </tr>`;
-                        $("#softwareTableBody").prepend(newSoftwareRow);
-                    } else {
-                        $("#responseMessage").css("color", "red").text(data.message);
-                    }
-                }
-            });
-        });
-    });
-</script>
-
-</body>
-</html>
+                    while ($row = $result_contact_messages->fetch_assoc()) {_

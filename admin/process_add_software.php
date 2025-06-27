@@ -24,7 +24,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("sss", $software_name, $software_version, $download_link);
 
         if ($stmt->execute()) {
-            echo json_encode(["status" => "success", "message" => "Software added successfully"]);
+            $response = [
+                "status" => "success",
+                "message" => "Software added successfully",
+                "id" => $stmt->insert_id, // Fetch inserted ID
+                "software_name" => $software_name,
+                "software_version" => $software_version,
+                "download_link" => $download_link,
+                "created_at" => date('Y-m-d H:i:s')
+            ];
+            echo json_encode($response);
         } else {
             echo json_encode(["status" => "error", "message" => "Failed to add software"]);
         }
