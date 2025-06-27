@@ -100,7 +100,7 @@
             color: #ffffff;
             padding: 10px;
             font-size: 16px;
-            display: none;
+            display: block;
             z-index: 999;
         }
 
@@ -121,9 +121,9 @@
 
         /* Notice Button */
         #noticeBtn {
-            position: fixed;
-            left: 10px;
-            bottom: 100px;
+            position: absolute;
+            left: 20px;
+            top: 12px;
             background-color: #62a92b;
             color: white;
             padding: 10px 20px;
@@ -165,7 +165,7 @@
 <body>
 
 <!-- Scrolling Message -->
-<div id="scrollMessage" class="scroll-container">
+<div class="scroll-container">
     <div class="scroll-text">
         "If you can, please consider purchasing the software to support its developers. This software is shared here purely for educational purposes, and I do not host or store it on this site. I found it online and am providing it to you for learning and educational use only."
     </div>
@@ -228,9 +228,6 @@
     </div>
 </div>
 
-<!-- Notice Button -->
-<button id="noticeBtn">Notice</button>
-
 <!-- Footer Menu -->
 <footer class="footer-space">
     <p>&copy; 2025 Golam Rabbi. All Rights Reserved.</p>
@@ -240,7 +237,7 @@
     <a href="https://mac.golamrabbi.dev/contact-us.html">Contact Us</a>
 </footer>
 
-<!-- JavaScript for AJAX form submission and scroll functionality -->
+<!-- JavaScript for AJAX form submission -->
 <script>
     document.getElementById('softwareRequestForm').addEventListener('submit', function(event) {
         event.preventDefault();  // Prevent default form submission
@@ -262,16 +259,6 @@
 
         // Send form data via AJAX
         xhr.send(formData);
-    });
-
-    // Toggle scroll text display when the Notice button is clicked
-    document.getElementById('noticeBtn').addEventListener('click', function() {
-        var scrollMessage = document.getElementById('scrollMessage');
-        if (scrollMessage.style.display === 'none' || scrollMessage.style.display === '') {
-            scrollMessage.style.display = 'block';  // Show the scrolling message
-        } else {
-            scrollMessage.style.display = 'none';  // Hide the scrolling message
-        }
     });
 </script>
 
