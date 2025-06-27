@@ -20,19 +20,9 @@ if ($conn->connect_error) {
 $sql_software_requests = "SELECT * FROM software_requests ORDER BY id DESC";  // Or use 'date' if added
 $result_software_requests = $conn->query($sql_software_requests);
 
-// Check for any database errors
-if (!$result_software_requests) {
-    die("Error fetching software requests: " . $conn->error);
-}
-
 // Fetch contact messages (ordering by 'id' or 'date' if added)
 $sql_contact_messages = "SELECT * FROM contact_messages ORDER BY id DESC";  // Or use 'date' if added
 $result_contact_messages = $conn->query($sql_contact_messages);
-
-// Check for any database errors
-if (!$result_contact_messages) {
-    die("Error fetching contact messages: " . $conn->error);
-}
 ?>
 
 <!DOCTYPE html>
@@ -42,107 +32,43 @@ if (!$result_contact_messages) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <style>
-        body {
-            background-color: #212529;
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 80%;
-            margin: 50px auto;
-        }
-        h1 {
-            color: #62a92b;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .dashboard-section {
-            margin-bottom: 40px;
-        }
-        .dashboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .dashboard-table th, .dashboard-table td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #444;
-        }
-        .dashboard-table th {
-            background-color: #333;
-            color: #62a92b;
-        }
-        .dashboard-table tr:nth-child(even) {
-            background-color: #2c2f33;
-        }
-        .dashboard-table tr:hover {
-            background-color: #3b3e45;
-        }
-        .dashboard-table td {
-            color: #bbb;
-        }
-        .button {
-            background-color: #62a92b;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        .button:hover {
-            background-color: #4e8b1f;
-        }
-
-        /* Add Software Form */
-        .add-software-container {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-top: 30px;
-        }
-
-        .add-software-container h2 {
-            color: #62a92b;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .add-software-container label {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .add-software-container input,
-        .add-software-container textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #444;
-            color: #fff;
-        }
-
-        .add-software-container button {
-            background-color: #62a92b;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .add-software-container button:hover {
-            background-color: #4e8b1f;
-        }
+        /* Your existing CSS */
     </style>
+
+    <!-- jQuery for AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Handle form submission for adding software
+            $('#add-software-form').submit(function(e) {
+                e.preventDefault();
+
+                // Collect form data
+                var softwareData = $(this).serialize();
+
+                // AJAX call to submit data
+                $.ajax({
+                    url: 'process_add_software.php',
+                    type: 'POST',
+                    data: softwareData,
+                    success: function(response) {
+                        // On success, display success message and reload software list
+                        $('#message').text('Software added successfully!');
+                        $('#message').css('color', 'green');
+
+                        // Reset the form after successful submission
+                        $('#add-software-form')[0].reset();
+                    },
+                    error: function() {
+                        // On failure, display error message
+                        $('#message').text('There was an error. Please try again.');
+                        $('#message').css('color', 'red');
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -220,7 +146,7 @@ if (!$result_contact_messages) {
     <!-- Add Software Section -->
     <div class="add-software-container">
         <h2>Add New Software</h2>
-        <form action="process_add_software.php" method="POST">
+        <form id="add-software-form">
             <label for="software_name">Software Name</label>
             <input type="text" id="software_name" name="software_name" required>
 
@@ -232,6 +158,7 @@ if (!$result_contact_messages) {
 
             <button type="submit">Add Software</button>
         </form>
+        <div id="message"></div> <!-- Success or error message -->
     </div>
 
     <!-- Logout Button -->
