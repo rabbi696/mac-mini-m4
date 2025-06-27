@@ -1,60 +1,16 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect form data
-    $software_name = $_POST['software-name'];
-    $software_version = $_POST['software-version'];
-    $additional_info = $_POST['additional-info'];
-    $visitor_email = $_POST['visitor-email'];
+$conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
+if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
-    // Collect reCAPTCHA response
-    $recaptcha_response = $_POST['g-recaptcha-response'];
+$name = $conn->real_escape_string($_POST['software-name']);
+$version = $conn->real_escape_string($_POST['software-version']);
+$info = $conn->real_escape_string($_POST['additional-info']);
+$email = $conn->real_escape_string($_POST['visitor-email']);
 
-    // Secret Key from Google reCAPTCHA
-    $secret_key = "6LeJ-G4rAAAAAIZ3PXBJQga9dTvqtDnI5Kkd_bVP"; // Replace with your Secret Key
+$sql = "INSERT INTO software_requests (software_name, software_version, additional_info, visitor_email) 
+        VALUES ('$name', '$version', '$info', '$email')";
+$conn->query($sql);
+$conn->close();
 
-    // Google reCAPTCHA Verification URL
-    $url = 'https://www.google.com/recaptcha/api/siteverify';
-    $data = [
-        'secret' => $secret_key,
-        'response' => $recaptcha_response
-    ];
-
-    // Send the POST request to Google's reCAPTCHA verification API
-    $options = [
-        'http' => [
-            'method' => 'POST',
-            'content' => http_build_query($data),
-            'header' => "Content-Type: application/x-www-form-urlencoded\r\n"
-        ]
-    ];
-
-    $context = stream_context_create($options);
-    $response = file_get_contents($url, false, $context);
-    $response_keys = json_decode($response, true);
-
-    // Check if reCAPTCHA is valid
-    if (intval($response_keys["success"]) !== 1) {
-        echo "Please complete the reCAPTCHA.";
-    } else {
-        // reCAPTCHA verified, process the form
-
-        // You can send the request details via email or store them in a database
-        // Example: Send the software request via email
-
-        $to = "rabbi@solveez.com"; // Replace with your email address
-        $subject = "Software Request for $software_name";
-        $email_content = "Software Name: $software_name\n";
-        $email_content .= "Software Version: $software_version\n";
-        $email_content .= "Additional Info: $additional_info\n";
-        $email_content .= "Visitor Email: $visitor_email\n";
-
-        $headers = "From: $visitor_email";
-
-        if (mail($to, $subject, $email_content, $headers)) {
-            echo "Software request sent successfully!";
-        } else {
-            echo "Failed to send the software request. Please try again later.";
-        }
-    }
-}
+echo "Request submitted!";
 ?>
