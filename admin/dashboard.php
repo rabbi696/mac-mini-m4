@@ -103,10 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
         .button:hover {
             background-color: #4e8b1f;
         }
-        #responseMessage {
-            color: red;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
@@ -191,7 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
             <input type="text" name="download_link" placeholder="Download Link" required>
             <button type="submit" class="button">Add Software</button>
         </form>
-        <div id="responseMessage"></div>
     </div>
 
     <!-- Logout Button -->
