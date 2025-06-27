@@ -1,166 +1,33 @@
 <?php
-// Assuming you are fetching data from your database for display
-
-// Database connection (make sure to use your correct database credentials)
-$conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+session_start();
+if (!isset($_SESSION['admin_logged_in'])) {
+    header("Location: login.php");
+    exit();
 }
 
-// Fetch software requests
-$sql_software_requests = "SELECT * FROM software_requests ORDER BY date DESC";
-$result_software_requests = $conn->query($sql_software_requests);
-
-// Fetch contact messages
-$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY date DESC";
-$result_contact_messages = $conn->query($sql_contact_messages);
+$conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
 ?>
+<h2>Software Requests</h2>
+<table border="1">
+    <tr><th>ID</th><th>Name</th><th>Version</th><th>Email</th><th>Info</th><th>Date</th></tr>
+    <?php
+    $result = $conn->query("SELECT * FROM software_requests ORDER BY submitted_at DESC");
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr><td>{$row['id']}</td><td>{$row['software_name']}</td><td>{$row['software_version']}</td>
+        <td>{$row['visitor_email']}</td><td>{$row['additional_info']}</td><td>{$row['submitted_at']}</td></tr>";
+    }
+    ?>
+</table>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <style>
-        body {
-            background-color: #212529;
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 80%;
-            margin: 50px auto;
-        }
-        h1 {
-            color: #62a92b;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .dashboard-section {
-            margin-bottom: 40px;
-        }
-        .dashboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .dashboard-table th, .dashboard-table td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #444;
-        }
-        .dashboard-table th {
-            background-color: #333;
-            color: #62a92b;
-        }
-        .dashboard-table tr:nth-child(even) {
-            background-color: #2c2f33;
-        }
-        .dashboard-table tr:hover {
-            background-color: #3b3e45;
-        }
-        .dashboard-table td {
-            color: #bbb;
-        }
-        .button {
-            background-color: #62a92b;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        .button:hover {
-            background-color: #4e8b1f;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>Admin Dashboard</h1>
-
-    <!-- Software Requests Section -->
-    <div class="dashboard-section">
-        <h2>Software Requests</h2>
-        <table class="dashboard-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Version</th>
-                    <th>Email</th>
-                    <th>Info</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result_software_requests->num_rows > 0) {
-                    while ($row = $result_software_requests->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row["id"] . "</td>";
-                        echo "<td>" . $row["software_name"] . "</td>";
-                        echo "<td>" . $row["software_version"] . "</td>";
-                        echo "<td>" . $row["visitor_email"] . "</td>";
-                        echo "<td>" . $row["additional_info"] . "</td>";
-                        echo "<td>" . $row["date"] . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='6'>No software requests found</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Contact Messages Section -->
-    <div class="dashboard-section">
-        <h2>Contact Messages</h2>
-        <table class="dashboard-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Message</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result_contact_messages->num_rows > 0) {
-                    while ($row = $result_contact_messages->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row["id"] . "</td>";
-                        echo "<td>" . $row["name"] . "</td>";
-                        echo "<td>" . $row["email"] . "</td>";
-                        echo "<td>" . $row["message"] . "</td>";
-                        echo "<td>" . $row["date"] . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='5'>No contact messages found</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Logout Button -->
-    <div style="text-align: center;">
-        <a href="logout.php" class="button">Logout</a>
-    </div>
-</div>
-
-</body>
-</html>
-
-<?php
-$conn->close();
-?>
+<h2>Contact Messages</h2>
+<table border="1">
+    <tr><th>ID</th><th>Name</th><th>Email</th><th>Message</th><th>Date</th></tr>
+    <?php
+    $result = $conn->query("SELECT * FROM contact_messages ORDER BY submitted_at DESC");
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr><td>{$row['id']}</td><td>{$row['name']}</td><td>{$row['email']}</td>
+        <td>{$row['message']}</td><td>{$row['submitted_at']}</td></tr>";
+    }
+    $conn->close();
+    ?>
+</table>
