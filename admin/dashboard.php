@@ -4,27 +4,42 @@ session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-
 // Check if the user is logged in, if not redirect to login page
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header("Location: login.php");
+    header("Location: login.php");  // Redirect to login page if not logged in
     exit();
 }
 
-// Database connection
+// Database connection (use your actual credentials)
 $conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
-
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch software requests
-$sql_software_requests = "SELECT * FROM software ORDER BY created_at DESC";
+// Fetch software requests (ordering by 'id' or 'date' if added)
+$sql_software_requests = "SELECT * FROM software_requests ORDER BY id DESC";  // Or use 'date' if added
 $result_software_requests = $conn->query($sql_software_requests);
 
-// Fetch contact messages
-$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY id DESC";
+// Fetch contact messages (ordering by 'id' or 'date' if added)
+$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY id DESC";  // Or use 'date' if added
 $result_contact_messages = $conn->query($sql_contact_messages);
+
+// Check for any submitted new software requests
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && isset($_POST['software_version'])) {
+    $software_name = $_POST['software_name'];
+    $software_version = $_POST['software_version'];
+    $download_link = $_POST['download_link'];
+    $date = date('Y-m-d H:i:s');
+
+    $stmt = $conn->prepare("INSERT INTO software (software_name, software_version, download_link, date) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $software_name, $software_version, $download_link, $date);
+    $stmt->execute();
+    $stmt->close();
+
+    // Redirect back to dashboard after insert
+    header("Location: dashboard.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -88,6 +103,10 @@ $result_contact_messages = $conn->query($sql_contact_messages);
         .button:hover {
             background-color: #4e8b1f;
         }
+        #responseMessage {
+            color: red;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -109,7 +128,7 @@ $result_contact_messages = $conn->query($sql_contact_messages);
                     <th>Date</th>
                 </tr>
             </thead>
-            <tbody id="softwareTableBody">
+            <tbody>
                 <?php
                 if ($result_software_requests->num_rows > 0) {
                     while ($row = $result_software_requests->fetch_assoc()) {
@@ -119,7 +138,7 @@ $result_contact_messages = $conn->query($sql_contact_messages);
                         echo "<td>" . $row["software_version"] . "</td>";
                         echo "<td>" . $row["visitor_email"] . "</td>";
                         echo "<td>" . $row["additional_info"] . "</td>";
-                        echo "<td>" . $row["created_at"] . "</td>";
+                        echo "<td>" . $row["date"] . "</td>";
                         echo "</tr>";
                     }
                 } else {
@@ -128,18 +147,6 @@ $result_contact_messages = $conn->query($sql_contact_messages);
                 ?>
             </tbody>
         </table>
-    </div>
-
-    <!-- Add New Software Section -->
-    <div class="dashboard-section">
-        <h2>Add New Software</h2>
-        <form id="addSoftwareForm">
-            <input type="text" id="software_name" name="software_name" placeholder="Software Name" required><br>
-            <input type="text" id="software_version" name="software_version" placeholder="Version" required><br>
-            <input type="text" id="download_link" name="download_link" placeholder="Download Link" required><br>
-            <button type="submit" class="button">Add Software</button>
-        </form>
-        <div id="responseMessage" style="color: red; margin-top: 10px;"></div>
     </div>
 
     <!-- Contact Messages Section -->
@@ -158,4 +165,44 @@ $result_contact_messages = $conn->query($sql_contact_messages);
             <tbody>
                 <?php
                 if ($result_contact_messages->num_rows > 0) {
-                    while ($row = $result_contact_messages->fetch_assoc()) {_
+                    while ($row = $result_contact_messages->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row["id"] . "</td>";
+                        echo "<td>" . $row["name"] . "</td>";
+                        echo "<td>" . $row["email"] . "</td>";
+                        echo "<td>" . $row["message"] . "</td>";
+                        echo "<td>" . $row["date"] . "</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='5'>No contact messages found</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add New Software Section -->
+    <div class="dashboard-section">
+        <h2>Add New Software</h2>
+        <form action="dashboard.php" method="POST">
+            <input type="text" name="software_name" placeholder="Software Name" required>
+            <input type="text" name="software_version" placeholder="Version" required>
+            <input type="text" name="download_link" placeholder="Download Link" required>
+            <button type="submit" class="button">Add Software</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+
+    <!-- Logout Button -->
+    <div style="text-align: center;">
+        <a href="logout.php" class="button">Logout</a>
+    </div>
+</div>
+
+</body>
+</html>
+
+<?php
+$conn->close();
+?>
