@@ -1,27 +1,26 @@
 <?php
 session_start();
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 // Check if the user is logged in, if not redirect to login page
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: login.php");  // Redirect to login page if not logged in
     exit();
 }
 
-// Database connection (use your actual credentials)
+// Database connection
 $conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
+
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch software requests (ordering by 'id' or 'date' if added)
-$sql_software_requests = "SELECT * FROM software_requests ORDER BY id DESC";  // Or use 'date' if added
+// Fetch software requests
+$sql_software_requests = "SELECT * FROM software_requests ORDER BY id DESC";
 $result_software_requests = $conn->query($sql_software_requests);
 
-// Fetch contact messages (ordering by 'id' or 'date' if added)
-$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY id DESC";  // Or use 'date' if added
+// Fetch contact messages
+$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY id DESC";
 $result_contact_messages = $conn->query($sql_contact_messages);
 ?>
 
@@ -86,19 +85,26 @@ $result_contact_messages = $conn->query($sql_contact_messages);
         .button:hover {
             background-color: #4e8b1f;
         }
-
-        /* New Software Add Form */
-        #add-software-form input, #add-software-form button {
-            padding: 10px;
-            margin: 5px 0;
-        }
-        #add-software-form {
+        /* Add Software Form */
+        .add-software-form {
+            background-color: #333;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 50%;
             margin-top: 20px;
         }
-
-        /* Message display */
-        #software-message {
-            margin-top: 10px;
+        .add-software-form input, .add-software-form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .add-software-form button {
+            background-color: #62a92b;
+            color: white;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -175,16 +181,16 @@ $result_contact_messages = $conn->query($sql_contact_messages);
         </table>
     </div>
 
-    <!-- Add New Software Form -->
-    <div class="dashboard-section">
+    <!-- Add Software Form -->
+    <div class="add-software-form">
         <h2>Add New Software</h2>
-        <form id="add-software-form">
-            <input type="text" id="software-name" name="software_name" placeholder="Software Name" required>
-            <input type="text" id="software-version" name="software_version" placeholder="Version" required>
-            <input type="text" id="download-link" name="download_link" placeholder="Download Link" required>
+        <form id="addSoftwareForm">
+            <input type="text" id="softwareName" name="software_name" placeholder="Software Name" required><br>
+            <input type="text" id="softwareVersion" name="software_version" placeholder="Version" required><br>
+            <input type="text" id="downloadLink" name="download_link" placeholder="Download Link" required><br>
             <button type="submit">Add Software</button>
         </form>
-        <div id="software-message"></div>
+        <div id="softwareMessage"></div>
     </div>
 
     <!-- Logout Button -->
@@ -193,39 +199,39 @@ $result_contact_messages = $conn->query($sql_contact_messages);
     </div>
 </div>
 
-<!-- JavaScript for AJAX Form Submission -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function(){
-    $('#add-software-form').on('submit', function(e){
-        e.preventDefault(); // Prevent page reload
-        var software_name = $('#software-name').val();
-        var software_version = $('#software-version').val();
-        var download_link = $('#download-link').val();
+    // Handle form submission with AJAX
+    document.getElementById('addSoftwareForm').addEventListener('submit', function (e) {
+        e.preventDefault();
 
-        $.ajax({
-            type: "POST",
-            url: "process_add_software.php",
-            data: {
-                software_name: software_name,
-                software_version: software_version,
-                download_link: download_link
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status == 'success') {
-                    $('#software-message').html('<span style="color: green;">' + response.message + '</span>'); // Success message
-                    window.location.reload(); // Refresh the page to see the new software added
-                } else {
-                    $('#software-message').html('<span style="color: red;">' + response.message + '</span>'); // Error message
-                }
-            },
-            error: function() {
-                $('#software-message').html('<span style="color: red;">An unexpected error occurred. Please try again.</span>');
+        var softwareName = document.getElementById('softwareName').value;
+        var softwareVersion = document.getElementById('softwareVersion').value;
+        var downloadLink = document.getElementById('downloadLink').value;
+
+        var formData = new FormData();
+        formData.append('software_name', softwareName);
+        formData.append('software_version', softwareVersion);
+        formData.append('download_link', downloadLink);
+
+        fetch('process_add_software.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('softwareMessage').innerHTML = '<span style="color: green;">' + data.message + '</span>';
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                document.getElementById('softwareMessage').innerHTML = '<span style="color: red;">' + data.message + '</span>';
             }
+        })
+        .catch(error => {
+            document.getElementById('softwareMessage').innerHTML = '<span style="color: red;">An unexpected error occurred. Please try again.</span>';
         });
     });
-});
 </script>
 
 </body>
