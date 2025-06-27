@@ -12,17 +12,17 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 // Database connection (use your actual credentials)
-$conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
+$conn = new mysqli("localhost", "db_user", "db_password", "db_name");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch software requests
-$sql_software_requests = "SELECT * FROM software_requests ORDER BY date DESC";
+// Fetch software requests (ordering by 'id' or 'date' if added)
+$sql_software_requests = "SELECT * FROM software_requests ORDER BY id DESC";  // Or use 'date' if added
 $result_software_requests = $conn->query($sql_software_requests);
 
-// Fetch contact messages
-$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY date DESC";
+// Fetch contact messages (ordering by 'id' or 'date' if added)
+$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY id DESC";  // Or use 'date' if added
 $result_contact_messages = $conn->query($sql_contact_messages);
 ?>
 
