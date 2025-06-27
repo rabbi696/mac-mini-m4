@@ -1,190 +1,210 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - Software Website</title>
-    <style>
-        body {
-            background-color: #212529;
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        /* Header Styles */
-        header {
-            background-color: #333;
-            padding: 20px 0;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        header a {
-            color: #62a92b;
-            text-decoration: none;
-            margin: 0 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        header a:hover {
-            text-decoration: underline;
-        }
-        /* Container Styles */
-        .container {
-            width: 80%;
-            margin: 50px auto;
-            text-align: center;
-        }
-        h1 {
-            color: #62a92b;
-            font-size: 36px;
-            margin-bottom: 30px;
-        }
-        /* Contact Form Styles */
-        .form-container {
-            background-color: #333;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-top: 30px;
-            width: 50%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .form-container h2 {
-            color: #62a92b;
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        .form-container label {
-            display: block;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        .form-container input,
-        .form-container textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #444;
-            color: #fff;
-        }
-        .form-container button {
-            background-color: #62a92b;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .form-container button:hover {
-            background-color: #4e8b1f;
-            transform: scale(1.05);
-        }
-        /* Success Message Styling */
-        .success-message {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 20px;
-            text-align: center;
-        }
-        /* Footer Styles */
-        footer {
-            background-color: #333;
-            color: #ffffff;
-            padding: 20px 0;
-            text-align: center;
-            margin-top: 50px;
-        }
-        footer a {
-            color: #62a92b;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
-        .footer-space {
-            margin-bottom: 50px;
-        }
-    </style>
-</head>
-<body>
-
-<!-- Header -->
-<header>
-    <a href="https://mac.golamrabbi.dev">Home</a>
-    <a href="https://mac.golamrabbi.dev/dmca.html">DMCA</a>
-    <a href="https://mac.golamrabbi.dev/contact-us.html">Contact Us</a>
-</header>
-
-<div class="container">
-    <h1>Contact Us</h1>
-    <p>If you have any questions, concerns, or need further assistance, feel free to reach out to us using the form below. We are here to help!</p>
-
-    <!-- Contact Us Form -->
-    <div class="form-container">
-        <h2>Contact Us</h2>
-        <form id="contactForm" method="POST">
-            <label for="name">Your Name</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="email">Your Email</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="message">Your Message</label>
-            <textarea id="message" name="message" required></textarea>
-
-            <button type="submit">Send Message</button>
-        </form>
-
-        <!-- Success message will appear here -->
-        <div id="successMessage" class="success-message" style="display: none;">
-            Message sent successfully!
-        </div>
-    </div>
-
-</div>
-
-<!-- Footer Menu -->
-<footer class="footer-space">
-    <p>&copy; 2025 Mac Software Support. All Rights Reserved.</p>
-    <a href="https://mac.golamrabbi.dev/terms-of-service.html">Terms of Service</a>
-    <a href="https://mac.golamrabbi.dev/privacy-policy.html">Privacy Policy</a>
-    <a href="https://mac.golamrabbi.dev/dmca.html">DMCA</a>
-    <a href="https://mac.golamrabbi.dev/contact-us.html">Contact Us</a>
-</footer>
-
-<!-- JavaScript for AJAX form submission -->
-<script>
-    document.getElementById('contactForm').addEventListener('submit', function(event) {
-        event.preventDefault();  // Prevent default form submission
-
-        var formData = new FormData(this);  // Gather form data
-
-        var xhr = new XMLHttpRequest();  // Create an XMLHttpRequest object
-        xhr.open('POST', 'process_contact.php', true);  // Set the request method and URL
-
-        // On successful response
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                document.getElementById('successMessage').style.display = 'block';  // Show success message
-                document.getElementById('contactForm').reset();  // Clear form fields
-            } else {
-                alert('There was an error submitting the form. Please try again.');
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contact Us - Software Website</title>
+        <style>
+            /* Styles omitted for brevity - consider moving to external CSS */
+            body {
+                background-color: #212529;
+                color: #ffffff;
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                padding: 0;
             }
-        };
+            /* Header Styles */
+            header {
+                background-color: #333;
+                padding: 20px 0;
+                text-align: center;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+            header a {
+                color: #62a92b;
+                text-decoration: none;
+                margin: 0 20px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            header a:hover {
+                text-decoration: underline;
+            }
+            /* Container Styles */
+            .container {
+                width: 80%;
+                margin: 50px auto;
+                text-align: center;
+            }
+            h1 {
+                color: #62a92b;
+                font-size: 36px;
+                margin-bottom: 30px;
+            }
+            /* Contact Form Styles */
+            .form-container {
+                background-color: #333;
+                padding: 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                margin-top: 30px;
+                width: 50%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .form-container h2 {
+                color: #62a92b;
+                font-size: 28px;
+                margin-bottom: 20px;
+            }
+            .form-container label {
+                display: block;
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+            .form-container input,
+            .form-container textarea {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #444;
+                color: #fff;
+            }
+            .form-container button {
+                background-color: #62a92b;
+                color: white;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.3s;
+            }
+            .form-container button:hover {
+                background-color: #4e8b1f;
+                transform: scale(1.05);
+            }
+            /* Success Message Styling */
+            .success-message {
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                margin-top: 20px;
+                text-align: center;
+            }
+            /* Footer Styles */
+            footer {
+                background-color: #333;
+                color: #ffffff;
+                padding: 20px 0;
+                text-align: center;
+                margin-top: 50px;
+            }
+            footer a {
+                color: #62a92b;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+            footer a:hover {
+                text-decoration: underline;
+            }
+            .footer-space {
+                margin-bottom: 50px;
+            }
+        </style>
+    </head>
+    <body>
 
-        // Send form data via AJAX
-        xhr.send(formData);
-    });
-</script>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="https://mac.golamrabbi.dev">Home</a>
+            <a href="https://mac.golamrabbi.dev/dmca.html">DMCA</a>
+            <a href="https://mac.golamrabbi.dev/contact-us.html">Contact Us</a>
+        </nav>
+    </header>
 
-</body>
-</html>
+    <main class="container">
+        <h1>Contact Us</h1>
+        <p>If you have any questions, concerns, or need further assistance, feel free to reach out to us using the form below. We are here to help!</p>
+
+        <!-- Contact Us Form -->
+        <div class="form-container">
+            <h2>Contact Us</h2>
+            <form id="contactForm" method="POST">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Your Email</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" required></textarea>
+
+                <button type="submit">Send Message</button>
+            </form>
+
+            <!-- Success message will appear here -->
+            <div id="successMessage" class="success-message" style="display: none;">
+                Message sent successfully!
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Menu -->
+    <footer class="footer-space">
+        <p>&copy; 2025 Mac Software Support. All Rights Reserved.</p>
+        <a href="https://mac.golamrabbi.dev/terms-of-service.html">Terms of Service</a>
+        <a href="https://mac.golamrabbi.dev/privacy-policy.html">Privacy Policy</a>
+        <a href="https://mac.golamrabbi.dev/dmca.html">DMCA</a>
+        <a href="https://mac.golamrabbi.dev/contact-us.html">Contact Us</a>
+    </footer>
+
+    <!-- JavaScript for AJAX form submission -->
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            var formData = new FormData(this);  // Gather form data
+
+            var xhr = new XMLHttpRequest();  // Create an XMLHttpRequest object
+            xhr.open('POST', 'admin/process_contact.php', true);  // Set the request method and URL
+
+            // On successful response
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Parse JSON response
+                    try {
+                        var responseData = JSON.parse(xhr.responseText);
+                        if (responseData.status === 'success') {
+                            document.getElementById('successMessage').textContent = responseData.message;
+                            document.getElementById('successMessage').style.display = 'block';  // Show success message
+                            document.getElementById('contactForm').reset();  // Clear form fields
+                        } else {
+                            alert('Error: ' + responseData.message);
+                        }
+                    } catch (e) {
+                        console.error("Failed to parse JSON response:", xhr.responseText, e);
+                        alert('There was an unexpected error. Please try again.');
+                    }
+                } else {
+                    alert('There was an error submitting the form. Please try again.');
+                }
+            };
+
+            // Handle network errors
+            xhr.onerror = function() {
+                alert('Network error. Please check your internet connection.');
+            };
+
+            // Send form data via AJAX
+            xhr.send(formData);
+        });
+    </script>
+
+    </body>
+    </html>
+    
