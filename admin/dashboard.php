@@ -1,29 +1,9 @@
 <?php
 session_start();
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-
-// Check if the user is logged in, if not redirect to login page
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header("Location: login.php");  // Redirect to login page if not logged in
+if (!isset($_SESSION['admin_logged_in'])) {
+    header('Location: login.php');
     exit();
 }
-
-// Database connection (use your actual credentials)
-$conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch software requests (ordering by 'id' or 'date' if added)
-$sql_software_requests = "SELECT * FROM software_requests ORDER BY id DESC";  // Or use 'date' if added
-$result_software_requests = $conn->query($sql_software_requests);
-
-// Fetch contact messages (ordering by 'id' or 'date' if added)
-$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY id DESC";  // Or use 'date' if added
-$result_contact_messages = $conn->query($sql_contact_messages);
 ?>
 
 <!DOCTYPE html>
@@ -40,137 +20,116 @@ $result_contact_messages = $conn->query($sql_contact_messages);
             margin: 0;
             padding: 0;
         }
+        header {
+            background-color: #333;
+            padding: 20px 0;
+            text-align: center;
+        }
+        header a {
+            color: #62a92b;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        header a:hover {
+            text-decoration: underline;
+        }
         .container {
             width: 80%;
             margin: 50px auto;
+            text-align: center;
         }
         h1 {
             color: #62a92b;
-            text-align: center;
+            font-size: 36px;
             margin-bottom: 30px;
         }
-        .dashboard-section {
-            margin-bottom: 40px;
-        }
-        .dashboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .dashboard-table th, .dashboard-table td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #444;
-        }
-        .dashboard-table th {
+        .form-container {
             background-color: #333;
-            color: #62a92b;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .dashboard-table tr:nth-child(even) {
-            background-color: #2c2f33;
+        .form-container input,
+        .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
         }
-        .dashboard-table tr:hover {
-            background-color: #3b3e45;
-        }
-        .dashboard-table td {
-            color: #bbb;
-        }
-        .button {
+        .form-container button {
             background-color: #62a92b;
             color: white;
             padding: 10px 20px;
+            border: none;
             border-radius: 5px;
-            text-decoration: none;
             font-size: 16px;
+            cursor: pointer;
         }
-        .button:hover {
+        .form-container button:hover {
             background-color: #4e8b1f;
+        }
+        footer {
+            background-color: #333;
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        footer a {
+            color: #62a92b;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
+<!-- Header -->
+<header>
+    <a href="https://mac.golamrabbi.dev">Home</a>
+    <a href="logout.php">Logout</a>
+</header>
+
 <div class="container">
     <h1>Admin Dashboard</h1>
 
-    <!-- Software Requests Section -->
-    <div class="dashboard-section">
-        <h2>Software Requests</h2>
-        <table class="dashboard-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Version</th>
-                    <th>Email</th>
-                    <th>Info</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result_software_requests->num_rows > 0) {
-                    while ($row = $result_software_requests->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row["id"] . "</td>";
-                        echo "<td>" . $row["software_name"] . "</td>";
-                        echo "<td>" . $row["software_version"] . "</td>";
-                        echo "<td>" . $row["visitor_email"] . "</td>";
-                        echo "<td>" . $row["additional_info"] . "</td>";
-                        echo "<td>" . $row["date"] . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='6'>No software requests found</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
+    <!-- Add New Software Form -->
+    <div class="form-container">
+        <h2>Add New Software</h2>
+        <form action="process_add_software.php" method="POST">
+            <label for="software-name">Software Name</label>
+            <input type="text" id="software-name" name="software-name" required>
 
-    <!-- Contact Messages Section -->
-    <div class="dashboard-section">
-        <h2>Contact Messages</h2>
-        <table class="dashboard-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Message</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result_contact_messages->num_rows > 0) {
-                    while ($row = $result_contact_messages->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row["id"] . "</td>";
-                        echo "<td>" . $row["name"] . "</td>";
-                        echo "<td>" . $row["email"] . "</td>";
-                        echo "<td>" . $row["message"] . "</td>";
-                        echo "<td>" . $row["date"] . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='5'>No contact messages found</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
+            <label for="software-version">Version</label>
+            <input type="text" id="software-version" name="software-version">
 
-    <!-- Logout Button -->
-    <div style="text-align: center;">
-        <a href="logout.php" class="button">Logout</a>
+            <label for="download-link">Download Link</label>
+            <input type="url" id="download-link" name="download-link" required>
+
+            <button type="submit">Add Software</button>
+        </form>
     </div>
 </div>
 
+<!-- Footer -->
+<footer>
+    <p>&copy; 2025 Golam Rabbi. All Rights Reserved.</p>
+    <a href="https://mac.golamrabbi.dev/terms-of-service.html">Terms of Service</a>
+    <a href="https://mac.golamrabbi.dev/privacy-policy.html">Privacy Policy</a>
+    <a href="https://mac.golamrabbi.dev/dmca.html">DMCA</a>
+    <a href="https://mac.golamrabbi.dev/contact-us.html">Contact Us</a>
+</footer>
+
 </body>
 </html>
-
-<?php
-$conn->close();
-?>
