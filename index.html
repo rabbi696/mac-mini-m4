@@ -55,7 +55,7 @@
             cursor: pointer;
             margin-right: 20px;
             z-index: 2;
-            position: relative;
+            position: absolute; /* Ensure it stays on the left */
         }
 
         #noticeBtn:hover {
@@ -67,6 +67,7 @@
             display: inline-block;
             animation: scroll-left 30s linear infinite;  /* Adjust scrolling speed */
             flex-grow: 1;
+            margin-left: 100px; /* Move text after the Notice button */
         }
 
         /* Animation for text scroll */
