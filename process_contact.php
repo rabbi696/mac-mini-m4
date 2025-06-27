@@ -14,45 +14,14 @@ $name = $_POST['name'];
 $email = $_POST['email'];
 $message = $_POST['message'];
 
-// Collect reCAPTCHA response
-$recaptcha_response = $_POST['g-recaptcha-response'];
+// Process the form data and insert into the database
+$sql = "INSERT INTO contact_messages (name, email, message) 
+        VALUES ('$name', '$email', '$message')";
 
-// Secret Key from Google reCAPTCHA
-$secret_key = "YOUR_SECRET_KEY"; // Replace with your Secret Key
-
-// Google reCAPTCHA Verification URL
-$url = 'https://www.google.com/recaptcha/api/siteverify';
-$data = [
-    'secret' => $secret_key,
-    'response' => $recaptcha_response
-];
-
-// Send the POST request to Google's reCAPTCHA verification API
-$options = [
-    'http' => [
-        'method' => 'POST',
-        'content' => http_build_query($data),
-        'header' => "Content-Type: application/x-www-form-urlencoded\r\n"
-    ]
-];
-
-$context = stream_context_create($options);
-$response = file_get_contents($url, false, $context);
-$response_keys = json_decode($response, true);
-
-// Check if reCAPTCHA is valid
-if (intval($response_keys["success"]) !== 1) {
-    echo "Please complete the reCAPTCHA.";
+if ($conn->query($sql) === TRUE) {
+    echo "Message sent successfully!";
 } else {
-    // reCAPTCHA verified, process the form
-    $sql = "INSERT INTO contact_messages (name, email, message) 
-            VALUES ('$name', '$email', '$message')";
-
-    if ($conn->query($sql) === TRUE) {
-        echo "Message sent successfully!";
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
-    }
+    echo "Error: " . $sql . "<br>" . $conn->error;
 }
 
 $conn->close();
