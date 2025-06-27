@@ -85,6 +85,15 @@
             background-color: #4e8b1f;
             transform: scale(1.05);
         }
+        /* Success Message Styling */
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+        }
         /* Footer Styles */
         footer {
             background-color: #333;
@@ -120,21 +129,26 @@
     <p>If you have any questions, concerns, or need further assistance, feel free to reach out to us using the form below. We are here to help!</p>
 
     <!-- Contact Us Form -->
-<div class="form-container">
-    <h2>Contact Us</h2>
-    <form action="process_contact.php" method="POST">
-        <label for="name">Your Name</label>
-        <input type="text" id="name" name="name" required>
-    
-        <label for="email">Your Email</label>
-        <input type="email" id="email" name="email" required>
-    
-        <label for="message">Your Message</label>
-        <textarea id="message" name="message" required></textarea>
-    
-        <button type="submit">Send Message</button>
-    </form>
-</div>
+    <div class="form-container">
+        <h2>Contact Us</h2>
+        <form id="contactForm" method="POST">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Your Message</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+
+        <!-- Success message will appear here -->
+        <div id="successMessage" class="success-message" style="display: none;">
+            Message sent successfully!
+        </div>
+    </div>
 
 </div>
 
@@ -146,6 +160,31 @@
     <a href="https://mac.golamrabbi.dev/dmca.html">DMCA</a>
     <a href="https://mac.golamrabbi.dev/contact-us.html">Contact Us</a>
 </footer>
+
+<!-- JavaScript for AJAX form submission -->
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        var formData = new FormData(this);  // Gather form data
+
+        var xhr = new XMLHttpRequest();  // Create an XMLHttpRequest object
+        xhr.open('POST', 'process_contact.php', true);  // Set the request method and URL
+
+        // On successful response
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                document.getElementById('successMessage').style.display = 'block';  // Show success message
+                document.getElementById('contactForm').reset();  // Clear form fields
+            } else {
+                alert('There was an error submitting the form. Please try again.');
+            }
+        };
+
+        // Send form data via AJAX
+        xhr.send(formData);
+    });
+</script>
 
 </body>
 </html>
