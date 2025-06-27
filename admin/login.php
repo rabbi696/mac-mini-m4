@@ -2,7 +2,7 @@
 session_start();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Database connection
-    $conn = new mysqli("localhost", "db_user", "db_password", "db_name");
+    $conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
@@ -37,6 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conn->close();
 }
 ?>
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 <!DOCTYPE html>
 <html lang="en">
