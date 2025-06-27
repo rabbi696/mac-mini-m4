@@ -52,6 +52,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
     header("Location: dashboard.php");
     exit();
 }
+
+// Delete record logic (for both software requests and contact messages)
+if (isset($_GET['delete'])) {
+    $id = $_GET['id'];
+    $type = $_GET['type'];
+
+    if ($type == 'software') {
+        // Delete software request
+        $stmt = $conn->prepare("DELETE FROM software_requests WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
+    } elseif ($type == 'contact') {
+        // Delete contact message
+        $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    // Redirect back to dashboard
+    header("Location: dashboard.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -146,6 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
                     <th>Email</th>
                     <th>Info</th>
                     <th>Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -159,10 +184,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
                         echo "<td>" . $row["visitor_email"] . "</td>";
                         echo "<td>" . $row["additional_info"] . "</td>";
                         echo "<td>" . $row["date"] . "</td>";
+                        echo "<td><a href='dashboard.php?delete=true&id=" . $row["id"] . "&type=software' class='button' style='background-color: red;'>Delete</a></td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>No software requests found</td></tr>";
+                    echo "<tr><td colspan='7'>No software requests found</td></tr>";
                 }
                 ?>
             </tbody>
@@ -189,6 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
                     <th>Email</th>
                     <th>Message</th>
                     <th>Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -201,10 +228,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
                         echo "<td>" . $row["email"] . "</td>";
                         echo "<td>" . $row["message"] . "</td>";
                         echo "<td>" . $row["date"] . "</td>";
+                        echo "<td><a href='dashboard.php?delete=true&id=" . $row["id"] . "&type=contact' class='button' style='background-color: red;'>Delete</a></td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='5'>No contact messages found</td></tr>";
+                    echo "<tr><td colspan='6'>No contact messages found</td></tr>";
                 }
                 ?>
             </tbody>
