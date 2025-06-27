@@ -93,21 +93,38 @@
         /* Scroll Text Styles */
         .scroll-container {
             position: fixed;
-            top: 75px; /* Adjusted to appear below the header */
+            top: 75px;
             left: 0;
             width: 100%;
             background-color: #333;
             color: #ffffff;
             padding: 10px;
             font-size: 16px;
-            display: block;
+            display: flex;
+            align-items: center;
             z-index: 999;
+        }
+
+        /* Notice Button */
+        #noticeBtn {
+            background-color: #62a92b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        #noticeBtn:hover {
+            background-color: #4e8b1f;
         }
 
         .scroll-text {
             white-space: nowrap;
             display: inline-block;
-            animation: scroll-left 10s linear infinite;
+            animation: scroll-left 30s linear infinite;  /* Slower scrolling speed */
         }
 
         @keyframes scroll-left {
@@ -117,25 +134,6 @@
             100% {
                 transform: translateX(-100%);
             }
-        }
-
-        /* Notice Button */
-        #noticeBtn {
-            position: absolute;
-            left: 20px;
-            top: 12px;
-            background-color: #62a92b;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        #noticeBtn:hover {
-            background-color: #4e8b1f;
         }
 
         /* Software Request Form */
@@ -205,6 +203,7 @@
 
 <!-- Scrolling Message -->
 <div class="scroll-container">
+    <button id="noticeBtn">Notice</button>
     <div class="scroll-text">
         "If you can, please consider purchasing the software to support its developers. This software is shared here purely for educational purposes, and I do not host or store it on this site. I found it online and am providing it to you for learning and educational use only."
     </div>
