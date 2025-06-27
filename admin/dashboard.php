@@ -16,13 +16,25 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch software requests (ordering by 'id' or 'date' if added)
-$sql_software_requests = "SELECT * FROM software_requests ORDER BY id DESC";  // Or use 'date' if added
+// Pagination logic for Software Requests
+$limit = 10;  // Limit the number of software requests per page
+$page = isset($_GET['page']) ? $_GET['page'] : 1;  // Get the page number from the URL, default to 1
+$offset = ($page - 1) * $limit;
+
+$sql_software_requests = "SELECT * FROM software_requests ORDER BY id DESC LIMIT $limit OFFSET $offset";
 $result_software_requests = $conn->query($sql_software_requests);
 
-// Fetch contact messages (ordering by 'id' or 'date' if added)
-$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY id DESC";  // Or use 'date' if added
+// Pagination logic for Contact Messages
+$sql_contact_messages = "SELECT * FROM contact_messages ORDER BY id DESC LIMIT $limit OFFSET $offset";
 $result_contact_messages = $conn->query($sql_contact_messages);
+
+// Get the total number of rows for both Software Requests and Contact Messages
+$total_software_requests = $conn->query("SELECT COUNT(*) AS count FROM software_requests")->fetch_assoc()['count'];
+$total_contact_messages = $conn->query("SELECT COUNT(*) AS count FROM contact_messages")->fetch_assoc()['count'];
+
+// Calculate total pages
+$total_pages_software = ceil($total_software_requests / $limit);
+$total_pages_contact = ceil($total_contact_messages / $limit);
 
 // Check for any submitted new software requests
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && isset($_POST['software_version'])) {
@@ -103,6 +115,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
         .button:hover {
             background-color: #4e8b1f;
         }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            color: #62a92b;
+            margin: 0 5px;
+            text-decoration: none;
+        }
+        .pagination a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -143,6 +167,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
                 ?>
             </tbody>
         </table>
+
+        <!-- Pagination for Software Requests -->
+        <div class="pagination">
+            <?php
+            for ($i = 1; $i <= $total_pages_software; $i++) {
+                echo "<a href='dashboard.php?page=$i'>$i</a>";
+            }
+            ?>
+        </div>
     </div>
 
     <!-- Contact Messages Section -->
@@ -176,6 +209,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['software_name']) && is
                 ?>
             </tbody>
         </table>
+
+        <!-- Pagination for Contact Messages -->
+        <div class="pagination">
+            <?php
+            for ($i = 1; $i <= $total_pages_contact; $i++) {
+                echo "<a href='dashboard.php?page=$i'>$i</a>";
+            }
+            ?>
+        </div>
     </div>
 
     <!-- Add New Software Section -->
