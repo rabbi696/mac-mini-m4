@@ -1,7 +1,13 @@
 <?php
-// Assuming you are fetching data from your database for display
+session_start();
 
-// Database connection (make sure to use your correct database credentials)
+// Check if the user is logged in, if not redirect to login page
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header("Location: login.php");  // Redirect to login page if not logged in
+    exit();
+}
+
+// Database connection (use your actual credentials)
 $conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
