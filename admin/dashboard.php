@@ -91,6 +91,17 @@ if (!isset($_SESSION['admin_logged_in'])) {
         footer a:hover {
             text-decoration: underline;
         }
+        .success-message, .error-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .error-message {
+            background-color: #f44336;
+        }
     </style>
 </head>
 <body>
@@ -103,6 +114,13 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
 <div class="container">
     <h1>Admin Dashboard</h1>
+
+    <!-- Display Success/Error Messages -->
+    <?php if (isset($_GET['success'])): ?>
+        <div class="success-message">Software added successfully!</div>
+    <?php elseif (isset($_GET['error'])): ?>
+        <div class="error-message">There was an error adding the software. Please try again.</div>
+    <?php endif; ?>
 
     <!-- Add New Software Form -->
     <div class="form-container">
