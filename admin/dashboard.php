@@ -3,20 +3,19 @@ session_start();
 
 // Check if the user is logged in, if not redirect to login page
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header("Location: login.php");  // Redirect to login page if not logged in
+    header("Location: login.php");
     exit();
 }
 
 // Database connection
 $conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 // Fetch software requests
-$sql_software_requests = "SELECT * FROM software_requests ORDER BY id DESC";
+$sql_software_requests = "SELECT * FROM software ORDER BY created_at DESC";
 $result_software_requests = $conn->query($sql_software_requests);
 
 // Fetch contact messages
@@ -85,27 +84,6 @@ $result_contact_messages = $conn->query($sql_contact_messages);
         .button:hover {
             background-color: #4e8b1f;
         }
-        /* Add Software Form */
-        .add-software-form {
-            background-color: #333;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 50%;
-            margin-top: 20px;
-        }
-        .add-software-form input, .add-software-form button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .add-software-form button {
-            background-color: #62a92b;
-            color: white;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -127,7 +105,7 @@ $result_contact_messages = $conn->query($sql_contact_messages);
                     <th>Date</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="softwareTableBody">
                 <?php
                 if ($result_software_requests->num_rows > 0) {
                     while ($row = $result_software_requests->fetch_assoc()) {
@@ -137,7 +115,7 @@ $result_contact_messages = $conn->query($sql_contact_messages);
                         echo "<td>" . $row["software_version"] . "</td>";
                         echo "<td>" . $row["visitor_email"] . "</td>";
                         echo "<td>" . $row["additional_info"] . "</td>";
-                        echo "<td>" . $row["date"] . "</td>";
+                        echo "<td>" . $row["submitted_at"] . "</td>";
                         echo "</tr>";
                     }
                 } else {
@@ -146,6 +124,18 @@ $result_contact_messages = $conn->query($sql_contact_messages);
                 ?>
             </tbody>
         </table>
+    </div>
+
+    <!-- Add New Software Section -->
+    <div class="dashboard-section">
+        <h2>Add New Software</h2>
+        <form id="addSoftwareForm">
+            <input type="text" id="software_name" name="software_name" placeholder="Software Name" required><br>
+            <input type="text" id="software_version" name="software_version" placeholder="Version" required><br>
+            <input type="text" id="download_link" name="download_link" placeholder="Download Link" required><br>
+            <button type="submit" class="button">Add Software</button>
+        </form>
+        <div id="responseMessage" style="color: red; margin-top: 10px;"></div>
     </div>
 
     <!-- Contact Messages Section -->
@@ -181,62 +171,54 @@ $result_contact_messages = $conn->query($sql_contact_messages);
         </table>
     </div>
 
-    <!-- Add Software Form -->
-    <div class="add-software-form">
-        <h2>Add New Software</h2>
-        <form id="addSoftwareForm">
-            <input type="text" id="softwareName" name="software_name" placeholder="Software Name" required><br>
-            <input type="text" id="softwareVersion" name="software_version" placeholder="Version" required><br>
-            <input type="text" id="downloadLink" name="download_link" placeholder="Download Link" required><br>
-            <button type="submit">Add Software</button>
-        </form>
-        <div id="softwareMessage"></div>
-    </div>
-
     <!-- Logout Button -->
     <div style="text-align: center;">
         <a href="logout.php" class="button">Logout</a>
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Handle form submission with AJAX
-    document.getElementById('addSoftwareForm').addEventListener('submit', function (e) {
-        e.preventDefault();
+    $(document).ready(function() {
+        $("#addSoftwareForm").submit(function(e) {
+            e.preventDefault();
+            
+            var softwareName = $("#software_name").val();
+            var softwareVersion = $("#software_version").val();
+            var downloadLink = $("#download_link").val();
 
-        var softwareName = document.getElementById('softwareName').value;
-        var softwareVersion = document.getElementById('softwareVersion').value;
-        var downloadLink = document.getElementById('downloadLink').value;
-
-        var formData = new FormData();
-        formData.append('software_name', softwareName);
-        formData.append('software_version', softwareVersion);
-        formData.append('download_link', downloadLink);
-
-        fetch('process_add_software.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                document.getElementById('softwareMessage').innerHTML = '<span style="color: green;">' + data.message + '</span>';
-                setTimeout(function () {
-                    window.location.reload();
-                }, 2000);
-            } else {
-                document.getElementById('softwareMessage').innerHTML = '<span style="color: red;">' + data.message + '</span>';
-            }
-        })
-        .catch(error => {
-            document.getElementById('softwareMessage').innerHTML = '<span style="color: red;">An unexpected error occurred. Please try again.</span>';
+            $.ajax({
+                url: 'process_add_software.php',
+                type: 'POST',
+                data: {
+                    software_name: softwareName,
+                    software_version: softwareVersion,
+                    download_link: downloadLink
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    if (data.status === "success") {
+                        $("#responseMessage").css("color", "green").text(data.message);
+                        $("#software_name").val('');
+                        $("#software_version").val('');
+                        $("#download_link").val('');
+                        var newSoftwareRow = `<tr>
+                            <td>${data.id}</td>
+                            <td>${softwareName}</td>
+                            <td>${softwareVersion}</td>
+                            <td>${data.email}</td>
+                            <td>${data.info}</td>
+                            <td>${data.date}</td>
+                        </tr>`;
+                        $("#softwareTableBody").prepend(newSoftwareRow);
+                    } else {
+                        $("#responseMessage").css("color", "red").text(data.message);
+                    }
+                }
+            });
         });
     });
 </script>
 
 </body>
 </html>
-
-<?php
-$conn->close();
-?>
