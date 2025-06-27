@@ -96,6 +96,52 @@ if (!$result_contact_messages) {
         .button:hover {
             background-color: #4e8b1f;
         }
+
+        /* Add Software Form */
+        .add-software-container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .add-software-container h2 {
+            color: #62a92b;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .add-software-container label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .add-software-container input,
+        .add-software-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+        }
+
+        .add-software-container button {
+            background-color: #62a92b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .add-software-container button:hover {
+            background-color: #4e8b1f;
+        }
     </style>
 </head>
 <body>
@@ -169,6 +215,23 @@ if (!$result_contact_messages) {
                 ?>
             </tbody>
         </table>
+    </div>
+
+    <!-- Add Software Section -->
+    <div class="add-software-container">
+        <h2>Add New Software</h2>
+        <form action="process_add_software.php" method="POST">
+            <label for="software_name">Software Name</label>
+            <input type="text" id="software_name" name="software_name" required>
+
+            <label for="software_version">Version</label>
+            <input type="text" id="software_version" name="software_version" required>
+
+            <label for="download_link">Download Link</label>
+            <input type="url" id="download_link" name="download_link" required>
+
+            <button type="submit">Add Software</button>
+        </form>
     </div>
 
     <!-- Logout Button -->
