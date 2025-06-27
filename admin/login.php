@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+// Enable error reporting for debugging (remove in production)
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Database connection
     $conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
@@ -37,9 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conn->close();
 }
 ?>
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 <!DOCTYPE html>
 <html lang="en">

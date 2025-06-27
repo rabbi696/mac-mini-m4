@@ -1,17 +1,59 @@
 <?php
-// DB connection
+// Enable error reporting for debugging (remove in production)
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// Database connection
 $conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
-if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-// Sanitize inputs
-$name = $conn->real_escape_string($_POST['name']);
-$email = $conn->real_escape_string($_POST['email']);
-$message = $conn->real_escape_string($_POST['message']);
+// Collect form data
+$name = $_POST['name'];
+$email = $_POST['email'];
+$message = $_POST['message'];
 
-// Insert into database
-$sql = "INSERT INTO contact_messages (name, email, message) VALUES ('$name', '$email', '$message')";
-$conn->query($sql);
+// Collect reCAPTCHA response
+$recaptcha_response = $_POST['g-recaptcha-response'];
+
+// Secret Key from Google reCAPTCHA
+$secret_key = "YOUR_SECRET_KEY"; // Replace with your Secret Key
+
+// Google reCAPTCHA Verification URL
+$url = 'https://www.google.com/recaptcha/api/siteverify';
+$data = [
+    'secret' => $secret_key,
+    'response' => $recaptcha_response
+];
+
+// Send the POST request to Google's reCAPTCHA verification API
+$options = [
+    'http' => [
+        'method' => 'POST',
+        'content' => http_build_query($data),
+        'header' => "Content-Type: application/x-www-form-urlencoded\r\n"
+    ]
+];
+
+$context = stream_context_create($options);
+$response = file_get_contents($url, false, $context);
+$response_keys = json_decode($response, true);
+
+// Check if reCAPTCHA is valid
+if (intval($response_keys["success"]) !== 1) {
+    echo "Please complete the reCAPTCHA.";
+} else {
+    // reCAPTCHA verified, process the form
+    $sql = "INSERT INTO contact_messages (name, email, message) 
+            VALUES ('$name', '$email', '$message')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Message sent successfully!";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+}
+
 $conn->close();
-
-echo "Message sent successfully!";
 ?>
