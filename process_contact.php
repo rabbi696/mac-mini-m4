@@ -1,27 +1,40 @@
 <?php
-// Enable error reporting for debugging (remove in production)
+// Enable error reporting
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Database connection
 $conn = new mysqli("localhost", "u273108828_mac", "MacWithWilson007*", "u273108828_mac");
+
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 // Collect form data
-$name = $_POST['name'];
-$email = $_POST['email'];
-$message = $_POST['message'];
+$software_name = isset($_POST['software_name']) ? trim($_POST['software_name']) : '';
+$software_version = isset($_POST['software_version']) ? trim($_POST['software_version']) : '';
+$download_link = isset($_POST['download_link']) ? trim($_POST['download_link']) : '';
 
-// Process the form data and insert into the database
-$sql = "INSERT INTO contact_messages (name, email, message) 
-        VALUES ('$name', '$email', '$message')";
+// Validate the input fields
+if (empty($software_name) || empty($software_version) || empty($download_link)) {
+    echo json_encode(['status' => 'error', 'message' => 'All fields are required!']);
+    exit();
+}
 
+// Debug: Check the data before insertion
+error_log("Inserting data: Software Name: $software_name, Version: $software_version, Download Link: $download_link");
+
+// Insert data into software table
+$sql = "INSERT INTO software (name, version, download_link, created_at)
+        VALUES ('$software_name', '$software_version', '$download_link', NOW())";
+
+// Execute the query
 if ($conn->query($sql) === TRUE) {
-    echo "Message sent successfully!";
+    echo json_encode(['status' => 'success', 'message' => 'Software added successfully!']);
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    // If there's an error, output the error message
+    echo json_encode(['status' => 'error', 'message' => 'An error occurred. Please try again.']);
 }
 
 $conn->close();
