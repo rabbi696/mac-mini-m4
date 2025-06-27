@@ -12,6 +12,7 @@
             margin: 0;
             padding: 0;
         }
+
         /* Header Styles */
         header {
             background-color: #333;
@@ -29,12 +30,14 @@
         header a:hover {
             text-decoration: underline;
         }
+
         /* Container Styles */
         .container {
             width: 80%;
             margin: 50px auto;
             text-align: center;
         }
+
         h1 {
             color: #62a92b;
             font-size: 36px;
@@ -42,6 +45,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
+
         .software-list {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -63,6 +67,7 @@
             font-size: 18px;
             margin: 10px 0;
         }
+
         .download-btn {
             background-color: #62a92b;
             color: #ffffff;
@@ -84,42 +89,35 @@
             font-weight: bold;
             color: #62a92b;
         }
-        .space-between {
-            margin-bottom: 15px;
-        }
-        /* Contact and Request Form */
-        .form-container {
-            background-color: #333;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-top: 30px;
-            width: 50%; /* Narrowed the form width */
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .form-container input,
-        .form-container textarea {
+
+        /* Scroll Text Styles */
+        .scroll-container {
+            position: fixed;
+            top: 20px;
+            left: 0;
             width: 100%;
+            background-color: #333;
+            color: #ffffff;
             padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #444;
-            color: #fff;
-        }
-        .form-container button {
-            background-color: #62a92b;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
             font-size: 16px;
-            cursor: pointer;
+            display: none;
         }
-        .form-container button:hover {
-            background-color: #4e8b1f;
+
+        .scroll-text {
+            white-space: nowrap;
+            display: inline-block;
+            animation: scroll-left 10s linear infinite;
         }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
         /* Footer */
         footer {
             background-color: #333;
@@ -138,19 +136,9 @@
         footer a:hover {
             text-decoration: underline;
         }
-        /* Adding space before footer */
+
         .footer-space {
             margin-bottom: 50px; /* Adjust this value to increase or decrease the space before footer */
-        }
-
-        /* Success Message Styling */
-        .success-message {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 20px;
-            text-align: center;
         }
     </style>
 </head>
@@ -240,27 +228,6 @@
             <br>
             <a href="https://github.com/p0deje/Maccy/releases/download/2.3.0/Maccy.app.zip" class="download-btn" download target="_blank">Download Now</a>
         </div>
-        <!-- Software 11 -->
-        <div class="software-item">
-            <p class="name">SoundSource</p>
-            <p class="version version-spacing">Version: 5.8.3</p>
-            <br>
-            <a href="https://www.mediafire.com/file/01tsgqouim3elta/SoundSource+v5.8.3.dmg/file" class="download-btn" download target="_blank">Download Now</a>
-        </div>
-        <!-- Software 12 -->
-        <div class="software-item">
-            <p class="name">Stats</p>
-            <p class="version version-spacing">Version: 2.11.45</p>
-            <br>
-            <a href="https://github.com/exelban/stats/releases/download/v2.11.45/Stats.dmg" class="download-btn" download target="_blank">Download Now</a>
-        </div>
-        <!-- Software 13 -->
-        <div class="software-item">
-            <p class="name">Microsoft Office 2021</p>
-            <p class="version version-spacing">Version: 16.89.1</p>
-            <br>
-            <a href="https://www.mediafire.com/file/vdf59ljr5952863/Microsoft_Office_2021_for_Mac_LTSC_v16.89.1.dmg/file" class="download-btn" download target="_blank">Download Now</a>
-        </div>
     </div>
 
     <!-- Software Request Form -->
@@ -288,7 +255,16 @@
             Your request has been sent successfully!
         </div>
     </div>
+</div>
 
+<!-- Notice Button -->
+<button id="noticeBtn" class="button" style="position: fixed; left: 10px; top: 200px;">Notice</button>
+
+<!-- Scrolling Message -->
+<div id="scrollMessage" class="scroll-container">
+    <div class="scroll-text">
+        "If you can, please consider purchasing the software to support its developers. This software is shared here purely for educational purposes, and I do not host or store it on this site. I found it online and am providing it to you for learning and educational use only."
+    </div>
 </div>
 
 <!-- Footer Menu -->
@@ -300,7 +276,7 @@
     <a href="https://mac.golamrabbi.dev/contact-us.html">Contact Us</a>
 </footer>
 
-<!-- JavaScript for AJAX form submission -->
+<!-- JavaScript for AJAX form submission and scroll functionality -->
 <script>
     document.getElementById('softwareRequestForm').addEventListener('submit', function(event) {
         event.preventDefault();  // Prevent default form submission
@@ -322,6 +298,16 @@
 
         // Send form data via AJAX
         xhr.send(formData);
+    });
+
+    // Toggle scroll text display when the Notice button is clicked
+    document.getElementById('noticeBtn').addEventListener('click', function() {
+        var scrollMessage = document.getElementById('scrollMessage');
+        if (scrollMessage.style.display === 'none' || scrollMessage.style.display === '') {
+            scrollMessage.style.display = 'block';  // Show the scrolling message
+        } else {
+            scrollMessage.style.display = 'none';  // Hide the scrolling message
+        }
     });
 </script>
 
