@@ -93,7 +93,7 @@
         /* Scroll Text Styles */
         .scroll-container {
             position: fixed;
-            top: 20px;
+            top: 10px;
             left: 0;
             width: 100%;
             background-color: #333;
@@ -101,6 +101,7 @@
             padding: 10px;
             font-size: 16px;
             display: none;
+            z-index: 999;
         }
 
         .scroll-text {
@@ -116,6 +117,25 @@
             100% {
                 transform: translateX(-100%);
             }
+        }
+
+        /* Notice Button */
+        #noticeBtn {
+            position: fixed;
+            left: 10px;
+            bottom: 100px;
+            background-color: #62a92b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #noticeBtn:hover {
+            background-color: #4e8b1f;
         }
 
         /* Footer */
@@ -138,11 +158,18 @@
         }
 
         .footer-space {
-            margin-bottom: 50px; /* Adjust this value to increase or decrease the space before footer */
+            margin-bottom: 50px;
         }
     </style>
 </head>
 <body>
+
+<!-- Scrolling Message -->
+<div id="scrollMessage" class="scroll-container">
+    <div class="scroll-text">
+        "If you can, please consider purchasing the software to support its developers. This software is shared here purely for educational purposes, and I do not host or store it on this site. I found it online and am providing it to you for learning and educational use only."
+    </div>
+</div>
 
 <!-- Header -->
 <header>
@@ -171,63 +198,7 @@
             <a href="https://www.mediafire.com/file/ono18y5idhqodlh/Illustrator_29.6_%255BMonter_Group%255D.dmg/file" class="download-btn" download target="_blank">Download Now</a>
             <br>
         </div>
-        <!-- Software 3 -->
-        <div class="software-item">
-            <p class="name">Adobe Premiere Pro</p>
-            <p class="version version-spacing">Version: 25.3.0</p>
-            <br>
-            <a href="https://www.mediafire.com/file/on8c4ehdbq1tew4/Premiere_Pro_25.3_%255BMonter_Group%255D.dmg/file" class="download-btn" download target="_blank">Download Now</a>
-            <br>
-        </div>
-        <!-- Software 4 -->
-        <div class="software-item">
-            <p class="name">Adobe After Effects</p>
-            <p class="version version-spacing">Version: 25.3.0</p>
-            <br>
-            <a href="https://www.mediafire.com/file/17a8f69k6dzswpe/After_Effects_25.3_%255BMonter_Group%255D.dmg/file" class="download-btn" download target="_blank">Download Now</a>
-        </div>
-        <!-- Software 5 -->
-        <div class="software-item">
-            <p class="name">Adobe InDesign</p>
-            <p class="version version-spacing">Version: 20.4.0</p>
-            <br>
-            <a href="https://www.mediafire.com/file/rgzofktxj6lgp4j/Adobe+inDesign+v20.4.0+Adobe+Activation+Tool.dmg/file" class="download-btn" download target="_blank">Download Now</a>
-        </div>
-        <!-- Software 6 -->
-        <div class="software-item">
-            <p class="name">Adobe Acrobat</p>
-            <p class="version version-spacing">Version: 24.005.20414</p>
-            <br>
-            <a href="https://www.mediafire.com/file/i257s6k7xpr7xo4/Adobe+Acrobat+Pro+(24.005.20414)+Adobe+Activation+Tool.dmg/file" class="download-btn" download target="_blank">Download Now</a>
-        </div>
-        <!-- Software 7 -->
-        <div class="software-item">
-            <p class="name">Adobe Audition</p>
-            <p class="version version-spacing">Version: 25.3.0</p>
-            <br>
-            <a href="https://www.mediafire.com/file/7509qw6j3efdla1/Audition+25.3+%5BMonter+Group%5D.dmg/file" class="download-btn" download target="_blank">Download Now</a>
-        </div>
-        <!-- Software 8 -->
-        <div class="software-item">
-            <p class="name">Adobe Encoder</p>
-            <p class="version version-spacing">Version: 25.3.0</p>
-            <br>
-            <a href="https://www.mediafire.com/file/t50o6oet30iybd6/Media+Encoder+25.3+%5BMonter+Group%5D.dmg/file" class="download-btn" download target="_blank">Download Now</a>
-        </div>
-        <!-- Software 9 -->
-        <div class="software-item">
-            <p class="name">CleanMyMac X</p>
-            <p class="version version-spacing">Version: 5.0.9</p>
-            <br>
-            <a href="https://zeroupload.com/f929262266d35892c298d34c0148424f" class="download-btn" download target="_blank">Download Now</a>
-        </div>
-        <!-- Software 10 -->
-        <div class="software-item">
-            <p class="name">Maccy</p>
-            <p class="version version-spacing">Version: 10.0.0</p>
-            <br>
-            <a href="https://github.com/p0deje/Maccy/releases/download/2.3.0/Maccy.app.zip" class="download-btn" download target="_blank">Download Now</a>
-        </div>
+        <!-- Add other software items as required -->
     </div>
 
     <!-- Software Request Form -->
@@ -258,14 +229,7 @@
 </div>
 
 <!-- Notice Button -->
-<button id="noticeBtn" class="button" style="position: fixed; left: 10px; top: 200px;">Notice</button>
-
-<!-- Scrolling Message -->
-<div id="scrollMessage" class="scroll-container">
-    <div class="scroll-text">
-        "If you can, please consider purchasing the software to support its developers. This software is shared here purely for educational purposes, and I do not host or store it on this site. I found it online and am providing it to you for learning and educational use only."
-    </div>
-</div>
+<button id="noticeBtn">Notice</button>
 
 <!-- Footer Menu -->
 <footer class="footer-space">
