@@ -1,3 +1,43 @@
+<?php
+session_start();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Database connection
+    $conn = new mysqli("localhost", "db_user", "db_password", "db_name");
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Collect username and password from the form
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Query to fetch the admin user from the database
+    $sql = "SELECT * FROM admin_users WHERE username = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Check if user exists
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        // Verify password using bcrypt
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['admin_logged_in'] = true;
+            header("Location: index.php");  // Redirect to the admin dashboard
+            exit();
+        } else {
+            $error = "Invalid username or password.";
+        }
+    } else {
+        $error = "Invalid username or password.";
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,6 +113,7 @@
         <button type="submit">Login</button>
 
         <?php
+        // Display error message if login fails
         if (isset($error)) {
             echo "<p class='error-message'>$error</p>";
         }
