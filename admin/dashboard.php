@@ -298,17 +298,6 @@
             </div>
         </div>
 
-        <!-- Add New Software Section -->
-        <div class="dashboard-section">
-            <h2>Add New Software</h2>
-            <form action="dashboard.php" method="POST">
-                <input type="text" name="software_name" placeholder="Software Name" required>
-                <input type="text" name="software_version" placeholder="Version" required>
-                <input type="text" name="download_link" placeholder="Download Link" required>
-                <button type="submit" class="button">Add Software</button>
-            </form>
-        </div>
-
         <!-- Logout Button -->
         <div style="text-align: center;">
             <a href="logout.php" class="button">Logout</a>
