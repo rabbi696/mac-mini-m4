@@ -7,6 +7,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 // Include configurations
 require_once '../config/db_config.php';
 require_once '../config/donation_config.php';
+require_once '../utils/maintenance_check.php';
 require_once 'PipraPay.php';
 
 // Function to log errors
@@ -33,6 +34,12 @@ try {
     // Validate amount
     if (!$amount || $amount < 1) {
         throw new Exception('Invalid donation amount');
+    }
+    
+    // Check if API is under maintenance
+    $api_status = MaintenanceChecker::checkApiStatus();
+    if ($api_status['status'] === 'maintenance') {
+        throw new Exception($api_status['message']);
     }
     
     // For BDT, use the amount as-is
