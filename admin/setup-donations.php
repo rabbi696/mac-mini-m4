@@ -74,19 +74,48 @@ try {
     $pdo->exec($create_table_sql);
     echo "✓ Donations table created successfully!\n";
 
-    // Create payment_settings table for admin API management
-    $create_settings_table_sql = "
-    CREATE TABLE IF NOT EXISTS payment_settings (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        setting_name VARCHAR(100) UNIQUE NOT NULL,
-        setting_value TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-    ";
-
-    $pdo->exec($create_settings_table_sql);
-    echo "✓ Payment settings table created successfully!\n";
+    // Check if payment_settings table exists and get its structure
+    $table_exists = false;
+    $has_correct_structure = false;
+    
+    try {
+        $result = $pdo->query("SHOW TABLES LIKE 'payment_settings'");
+        $table_exists = $result->rowCount() > 0;
+        
+        if ($table_exists) {
+            // Check if the table has the correct structure
+            $columns = $pdo->query("SHOW COLUMNS FROM payment_settings")->fetchAll();
+            $column_names = array_column($columns, 'Field');
+            $has_correct_structure = in_array('setting_name', $column_names) && in_array('setting_value', $column_names);
+        }
+    } catch (PDOException $e) {
+        // Table doesn't exist or other error
+        $table_exists = false;
+    }
+    
+    if (!$table_exists || !$has_correct_structure) {
+        // Drop existing table if it has wrong structure
+        if ($table_exists && !$has_correct_structure) {
+            $pdo->exec("DROP TABLE payment_settings");
+            echo "ℹ️  Dropped existing payment_settings table with incorrect structure\n";
+        }
+        
+        // Create payment_settings table for admin API management
+        $create_settings_table_sql = "
+        CREATE TABLE payment_settings (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            setting_name VARCHAR(100) UNIQUE NOT NULL,
+            setting_value TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        ";
+        
+        $pdo->exec($create_settings_table_sql);
+        echo "✓ Payment settings table created successfully!\n";
+    } else {
+        echo "ℹ️  Payment settings table already exists with correct structure\n";
+    }
 
     // Insert default payment settings
     $default_settings = [
