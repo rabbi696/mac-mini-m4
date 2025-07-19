@@ -7,37 +7,15 @@ header('Access-Control-Allow-Headers: Content-Type');
 // Include configurations
 require_once '../config/db_config.php';
 require_once '../config/donation_config.php';
+require_once 'PipraPay.php';
 
 // Function to log errors
 function logError($message) {
     $log_message = date('Y-m-d H:i:s') . " - " . $message . "\n";
-    file_put_contents('../logs/donation_errors.log', $log_message, FILE_APPEND | LOCK_EX);
-}
-
-// Function to make HTTP requests
-function makeHttpRequest($url, $data, $headers = []) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge([
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . DonationConfig::$piprapay_api_key
-    ], $headers));
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error = curl_error($ch);
-    curl_close($ch);
-    
-    if ($error) {
-        throw new Exception('cURL Error: ' . $error);
+    if (!file_exists('../logs')) {
+        mkdir('../logs', 0755, true);
     }
-    
-    return ['response' => $response, 'http_code' => $httpCode];
+    file_put_contents('../logs/donation_errors.log', $log_message, FILE_APPEND | LOCK_EX);
 }
 
 try {
@@ -49,7 +27,7 @@ try {
     // Validate and sanitize input
     $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
     $donor_name = filter_input(INPUT_POST, 'donor_name', FILTER_SANITIZE_STRING) ?: 'Anonymous';
-    $donor_email = filter_input(INPUT_POST, 'donor_email', FILTER_VALIDATE_EMAIL);
+    $donor_email = filter_input(INPUT_POST, 'donor_email', FILTER_VALIDATE_EMAIL) ?: 'anonymous@example.com';
     $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING) ?: '';
     
     // Validate amount
@@ -57,44 +35,47 @@ try {
         throw new Exception('Invalid donation amount');
     }
     
-    // For BDT, we don't need to convert to cents, use the amount as-is
-    $amount_final = intval($amount);
+    // For BDT, use the amount as-is
+    $amount_final = floatval($amount);
     
     // Generate unique reference ID
     $reference_id = 'donation_' . uniqid() . '_' . time();
     
-    // Prepare data for Piprapay API
+    // Initialize PipraPay
+    $piprapay = new PipraPay(
+        DonationConfig::$piprapay_api_key,
+        DonationConfig::$piprapay_base_url,
+        DonationConfig::$currency
+    );
+    
+    // Prepare data for PipraPay API
     $payment_data = [
+        'full_name' => $donor_name,
+        'email_mobile' => $donor_email,
         'amount' => $amount_final,
-        'currency' => DonationConfig::$currency,
-        'description' => 'Donation to Mac M4 Software',
-        'reference_id' => $reference_id,
-        'customer' => [
-            'name' => $donor_name,
-            'email' => $donor_email ?: ''
-        ],
         'metadata' => [
+            'reference_id' => $reference_id,
             'donor_name' => $donor_name,
             'message' => $message,
             'source' => 'mac_m4_website'
         ],
-        'success_url' => (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . DonationConfig::$success_redirect_url . '?reference=' . $reference_id,
+        'redirect_url' => (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . DonationConfig::$success_redirect_url . '?reference=' . $reference_id,
         'cancel_url' => (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . DonationConfig::$cancel_redirect_url,
         'webhook_url' => (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . DonationConfig::$webhook_url
     ];
     
-    // Create charge with Piprapay
-    $api_response = makeHttpRequest(DonationConfig::$piprapay_create_charge_endpoint, $payment_data);
+    // Create charge with PipraPay
+    $payment_response = $piprapay->createCharge($payment_data);
     
-    $payment_response = json_decode($api_response['response'], true);
-    
-    if ($api_response['http_code'] !== 200 && $api_response['http_code'] !== 201) {
-        throw new Exception('Payment provider error: ' . ($payment_response['message'] ?? 'Unknown error'));
+    // Check for cURL errors
+    if (isset($payment_response['status']) && $payment_response['status'] === false) {
+        throw new Exception('Payment provider error: ' . ($payment_response['error'] ?? 'Connection error'));
     }
     
     // Check if payment creation was successful
     if (!isset($payment_response['success']) || !$payment_response['success']) {
-        throw new Exception('Failed to create payment: ' . ($payment_response['message'] ?? 'Unknown error'));
+        $error_msg = $payment_response['message'] ?? $payment_response['error'] ?? 'Unknown error';
+        throw new Exception('Failed to create payment: ' . $error_msg);
     }
     
     // Save donation record to database
@@ -107,12 +88,12 @@ try {
         
         $stmt->execute([
             $reference_id,
-            $amount,
+            $amount_final,
             DonationConfig::$currency,
             $donor_name,
             $donor_email,
             $message,
-            $payment_response['payment_id'] ?? null
+            $payment_response['pp_id'] ?? $payment_response['payment_id'] ?? null
         ]);
         
     } catch (PDOException $e) {
@@ -124,7 +105,7 @@ try {
     echo json_encode([
         'success' => true,
         'reference_id' => $reference_id,
-        'payment_url' => $payment_response['payment_url'] ?? $payment_response['checkout_url'],
+        'payment_url' => $payment_response['pp_url'] ?? $payment_response['payment_url'] ?? $payment_response['checkout_url'],
         'message' => 'Payment initiated successfully'
     ]);
     
