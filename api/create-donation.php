@@ -4,11 +4,10 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Include configurations
-require_once '../config/db_config.php';
-require_once '../config/donation_config.php';
-require_once '../utils/maintenance_check.php';
-require_once 'PipraPay.php';
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
 
 // Function to log errors
 function logError($message) {

@@ -1,9 +1,9 @@
 <?php
 // Donation Configuration
 class DonationConfig {
-    // Piprapay API Configuration
-    public static $piprapay_api_key = '2108748469687127321a079129029705717499611661600709687127321a07e1465143757014442';
-    public static $piprapay_base_url = 'https://payment.solveez.com';
+    // Solveez (PipraPay) API Configuration - Production
+    public static $piprapay_api_key = '2108748469687b775b2b6ef1288790031302163742687b775b2b6f3757014442'; // Production API Key
+    public static $piprapay_base_url = 'https://payment.solveez.com/api';
     public static $piprapay_create_charge_endpoint = 'https://payment.solveez.com/api/create-charge';
     public static $piprapay_verify_payment_endpoint = 'https://payment.solveez.com/api/verify-payments';
     
