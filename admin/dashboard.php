@@ -298,6 +298,16 @@
             </div>
         </div>
 
+        <!-- Donation Management Section -->
+        <div class="dashboard-section">
+            <h2>Donation Management</h2>
+            <div style="text-align: center; margin: 20px 0;">
+                <a href="donation-dashboard.php" class="button" style="margin: 10px;">View Donations</a>
+                <a href="manage-payment-settings.php" class="button" style="margin: 10px;">Payment Settings</a>
+                <a href="setup-donations.php" class="button" style="margin: 10px; background-color: #17a2b8;">Setup Database</a>
+            </div>
+        </div>
+
         <!-- Logout Button -->
         <div style="text-align: center;">
             <a href="logout.php" class="button">Logout</a>

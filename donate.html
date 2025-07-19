@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate - Support Mac M4 Software</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4facfe;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #4facfe;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #a0a0a0;
+            line-height: 1.6;
+        }
+
+        /* Donation Card */
+        .donation-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .donation-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .amount-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .amount-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(79, 172, 254, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .amount-btn:hover,
+        .amount-btn.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-color: #4facfe;
+            transform: translateY(-2px);
+        }
+
+        .custom-amount {
+            margin-top: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .donate-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 1.25rem 2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .donate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .donate-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .payment-methods h3 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .payment-logo {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #4facfe;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .donation-card {
+                padding: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">Mac M4 Software</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="contact-us.html">Contact</a></li>
+                <li><a href="donate.html">Donate</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="hero">
+            <h1>Support Our Work</h1>
+            <p class="hero-subtitle">Help us continue providing the best software recommendations for Mac M4 users. Your donation keeps our platform running and ad-free.</p>
+        </div>
+
+        <div class="donation-card">
+            <form id="donationForm" class="donation-form">
+                <div class="amount-selector">
+                    <button type="button" class="amount-btn" data-amount="5">$5</button>
+                    <button type="button" class="amount-btn" data-amount="10">$10</button>
+                    <button type="button" class="amount-btn" data-amount="25">$25</button>
+                    <button type="button" class="amount-btn" data-amount="50">$50</button>
+                    <button type="button" class="amount-btn" data-amount="100">$100</button>
+                </div>
+
+                <div class="custom-amount">
+                    <div class="form-group">
+                        <label for="customAmount">Custom Amount ($)</label>
+                        <input type="number" id="customAmount" name="amount" min="1" placeholder="Enter custom amount">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="donorName">Your Name (Optional)</label>
+                    <input type="text" id="donorName" name="donor_name" placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label for="donorEmail">Email Address (Optional)</label>
+                    <input type="email" id="donorEmail" name="donor_email" placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message (Optional)</label>
+                    <textarea id="message" name="message" rows="3" placeholder="Leave a message of support"></textarea>
+                </div>
+
+                <button type="submit" class="donate-btn" id="donateBtn">
+                    Donate Now with Piprapay
+                </button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing your donation...</p>
+            </div>
+        </div>
+
+        <div class="payment-methods">
+            <h3>Secure Payment Processing</h3>
+            <div class="payment-logo">Piprapay</div>
+            <p style="margin-top: 1rem; color: #a0a0a0;">Your donation is processed securely through Piprapay payment gateway</p>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountButtons = document.querySelectorAll('.amount-btn');
+            const customAmountInput = document.getElementById('customAmount');
+            const donationForm = document.getElementById('donationForm');
+            const donateBtn = document.getElementById('donateBtn');
+            const loading = document.getElementById('loading');
+
+            // Amount button selection
+            amountButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    amountButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    customAmountInput.value = this.dataset.amount;
+                });
+            });
+
+            // Custom amount input
+            customAmountInput.addEventListener('input', function() {
+                amountButtons.forEach(b => b.classList.remove('active'));
+            });
+
+            // Form submission
+            donationForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const amount = parseFloat(customAmountInput.value);
+                if (!amount || amount < 1) {
+                    alert('Please select or enter a valid donation amount.');
+                    return;
+                }
+
+                // Show loading
+                donateBtn.disabled = true;
+                loading.style.display = 'block';
+
+                try {
+                    const formData = new FormData(donationForm);
+                    
+                    const response = await fetch('api/create-donation.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success && result.payment_url) {
+                        // Redirect to payment page
+                        window.location.href = result.payment_url;
+                    } else {
+                        throw new Error(result.message || 'Failed to process donation');
+                    }
+                } catch (error) {
+                    console.error('Donation error:', error);
+                    alert('Error processing donation: ' + error.message);
+                } finally {
+                    // Hide loading
+                    donateBtn.disabled = false;
+                    loading.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

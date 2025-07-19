@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You for Your Donation - Mac M4 Software</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-container {
+            max-width: 600px;
+            padding: 3rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .success-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .reference-info {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .reference-info p {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .reference-id {
+            font-family: monospace;
+            background: rgba(79, 172, 254, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #4facfe;
+        }
+
+        .home-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .home-button:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .success-container {
+                margin: 2rem;
+                padding: 2rem;
+            }
+
+            .success-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h1 class="success-title">Thank You!</h1>
+        <p class="success-message">
+            Your donation has been successfully processed. We truly appreciate your support in helping us maintain and improve the Mac M4 Software platform. Your contribution helps us keep the platform ad-free and continue providing valuable software recommendations.
+        </p>
+        
+        <div class="reference-info" id="referenceInfo" style="display: none;">
+            <p><strong>Reference ID:</strong></p>
+            <div class="reference-id" id="referenceId"></div>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #a0a0a0;">
+                Please save this reference ID for your records.
+            </p>
+        </div>
+        
+        <a href="index.html" class="home-button">Return to Homepage</a>
+    </div>
+
+    <script>
+        // Get reference ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const referenceId = urlParams.get('reference');
+        
+        if (referenceId) {
+            document.getElementById('referenceInfo').style.display = 'block';
+            document.getElementById('referenceId').textContent = referenceId;
+        }
+    </script>
+</body>
+</html>
