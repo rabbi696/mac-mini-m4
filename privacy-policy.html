@@ -82,6 +82,75 @@
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
         }
 
+        /* Notice Banner */
+        .scroll-container {
+            background: rgba(251, 146, 60, 0.1);
+            border: 1px solid rgba(251, 146, 60, 0.2);
+            border-left: none;
+            border-right: none;
+            padding: 0.75rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            height: 60px;
+            backdrop-filter: blur(10px);
+        }
+
+        .scroll-text-wrapper {
+            position: absolute;
+            left: 140px;
+            top: 0;
+            right: 0;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        #noticeBtn {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        #noticeBtn:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .scroll-text {
+            white-space: nowrap;
+            display: inline-block;
+            animation: scroll-left-fixed 30s linear infinite;
+            width: max-content;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes scroll-left-fixed {
+            0% {
+                transform: translateY(-50%) translateX(100%);
+            }
+            100% {
+                transform: translateY(-50%) translateX(-100%);
+            }
+        }
+
         /* Container Styles */
         .container {
             max-width: 1200px;
@@ -125,6 +194,35 @@
             max-width: 800px;
             margin: 0 auto;
             text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .content-section:hover {
+            transform: translateY(-4px);
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.2),
+                0 10px 10px -5px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(59, 130, 246, 0.1);
+        }
+
+        .content-section:hover::before {
+            opacity: 1;
         }
         
         .content-section h3 {
@@ -205,15 +303,25 @@
     <body>
 
     <!-- Header -->
-    <header>
-        <nav>
-            <a href="https://mac.golamrabbi.dev">Home</a>
-            <a href="https://mac.golamrabbi.dev/dmca.html">DMCA</a>
-            <a href="https://mac.golamrabbi.dev/contact-us.html">Contact Us</a>
-        </nav>
-    </header>
+    header
+    nav
+        a href="https://mac.golamrabbi.dev"Home/a
+        a href="https://mac.golamrabbi.dev/dmca.html"DMCA/a
+        a href="https://mac.golamrabbi.dev/contact-us.html"Contact Us/a
+    /nav
+/header
 
-    <main class="container">
+    !-- Notice Banner --
+    div class="scroll-container"
+        button id="noticeBtn" onclick="window.location.href='https://mac.golamrabbi.dev/donate'"Donate/button
+        div class="scroll-text-wrapper"
+            div class="scroll-text"
+                📢 Support our free software collection! Consider making a donation to help us keep providing these resources. Click the Donate button to contribute. 💖
+            /div
+        /div
+    /div
+
+    main class="container"
         <div class="hero">
             <h1>Privacy Policy</h1>
             <p class="hero-subtitle">Your privacy is important to us</p>
