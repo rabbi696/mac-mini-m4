@@ -718,10 +718,13 @@
             var formData = new FormData(this);  // Gather form data
 
             var xhr = new XMLHttpRequest();  // Create an XMLHttpRequest object
-            xhr.open('POST', 'app/process_request.php', true);  // Set the request method and URL
+            xhr.open('POST', 'admin/process_request.php', true);  // Set the request method and URL
 
             // On successful response
             xhr.onload = function() {
+                console.log('Response status:', xhr.status);
+                console.log('Response text:', xhr.responseText);
+                
                 if (xhr.status === 200) {
                     // Parse JSON response
                     try {
@@ -731,14 +734,16 @@
                             document.getElementById('successMessage').style.display = 'block';  // Show success message
                             document.getElementById('softwareRequestForm').reset();  // Clear form fields
                         } else {
+                            console.error('Server error:', responseData.message);
                             alert('Error: ' + responseData.message);
                         }
                     } catch (e) {
                         console.error("Failed to parse JSON response:", xhr.responseText, e);
-                        alert('There was an unexpected error. Please try again.');
+                        alert('There was an unexpected error. Please check the console for details.');
                     }
                 } else {
-                    alert('There was an error submitting the form. Please try again.');
+                    console.error('HTTP error:', xhr.status, xhr.statusText);
+                    alert('There was an error submitting the form (HTTP ' + xhr.status + '). Please try again.');
                 }
             };
 

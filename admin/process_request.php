@@ -13,6 +13,18 @@
 
     // Check if the form is submitted
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Validate required fields
+        if (empty($_POST['software-name']) || empty($_POST['visitor-email'])) {
+            echo json_encode(["status" => "error", "message" => "Software name and email are required."]);
+            exit();
+        }
+        
+        // Validate email format
+        if (!filter_var($_POST['visitor-email'], FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(["status" => "error", "message" => "Please enter a valid email address."]);
+            exit();
+        }
+        
         // Sanitize and retrieve form inputs
         $software_name = trim($_POST['software-name']);
         $software_version = trim($_POST['software-version']);
