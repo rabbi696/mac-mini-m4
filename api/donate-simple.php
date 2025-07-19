@@ -81,9 +81,12 @@ try {
     
     // Check HTTP response code
     if ($http_code !== 200) {
-        // If it's an authentication error, provide specific guidance
+        // Handle different error scenarios
         if ($http_code === 400 && strpos($response, 'Invalid API key') !== false) {
-            throw new Exception('Payment service is temporarily unavailable. Please try again later or contact support.');
+            throw new Exception('Payment service is currently under maintenance. Please try again in a few minutes.');
+        }
+        if ($http_code === 200 && (empty($response) || strpos($response, 'maintenance') !== false)) {
+            throw new Exception('Payment service is currently under maintenance. Please try again in a few minutes.');
         }
         throw new Exception('Payment service returned error code: ' . $http_code);
     }
