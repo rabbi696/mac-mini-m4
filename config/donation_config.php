@@ -8,7 +8,7 @@ class DonationConfig {
     public static $piprapay_verify_payment_endpoint = 'https://payment.solveez.com/api/verify-payments';
     
     // Donation Settings
-    public static $currency = 'USD';
+    public static $currency = 'BDT';
     public static $success_redirect_url = 'donation-success.html';
     public static $cancel_redirect_url = 'donation-cancel.html';
     public static $webhook_url = 'api/verify-donation.php';

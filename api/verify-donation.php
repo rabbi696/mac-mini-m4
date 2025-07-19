@@ -90,7 +90,7 @@ try {
         // Send notification email if payment is completed (optional)
         if ($final_status === 'completed') {
             // You can implement email notification here
-            logActivity("Donation completed: $reference_id - Amount: " . ($amount/100));
+            logActivity("Donation completed: $reference_id - Amount: ৳" . $amount);
         }
         
         // Return success response

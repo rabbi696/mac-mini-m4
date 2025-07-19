@@ -57,15 +57,15 @@ try {
         throw new Exception('Invalid donation amount');
     }
     
-    // Convert amount to cents for Piprapay (assuming they use cents)
-    $amount_cents = intval($amount * 100);
+    // For BDT, we don't need to convert to cents, use the amount as-is
+    $amount_final = intval($amount);
     
     // Generate unique reference ID
     $reference_id = 'donation_' . uniqid() . '_' . time();
     
     // Prepare data for Piprapay API
     $payment_data = [
-        'amount' => $amount_cents,
+        'amount' => $amount_final,
         'currency' => DonationConfig::$currency,
         'description' => 'Donation to Mac M4 Software',
         'reference_id' => $reference_id,

@@ -242,7 +242,7 @@ try {
         <!-- Statistics Cards -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-value">$<?php echo number_format($stats['total_completed'] ?? 0, 2); ?></div>
+                <div class="stat-value">৳<?php echo number_format($stats['total_completed'] ?? 0, 2); ?></div>
                 <div class="stat-label">Total Raised</div>
             </div>
             <div class="stat-card">
@@ -285,7 +285,7 @@ try {
                                 <?php endif; ?>
                             </td>
                             <td class="amount">
-                                $<?php echo number_format($donation['amount'], 2); ?> <?php echo htmlspecialchars($donation['currency']); ?>
+                                ৳<?php echo number_format($donation['amount'], 2); ?> <?php echo htmlspecialchars($donation['currency']); ?>
                             </td>
                             <td>
                                 <span class="status-badge status-<?php echo htmlspecialchars($donation['status']); ?>">

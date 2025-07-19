@@ -22,7 +22,7 @@ try {
         reference_id VARCHAR(255) UNIQUE NOT NULL,
         payment_id VARCHAR(255),
         amount DECIMAL(10, 2) NOT NULL,
-        currency VARCHAR(3) DEFAULT 'USD',
+        currency VARCHAR(3) DEFAULT 'BDT',
         donor_name VARCHAR(255) DEFAULT 'Anonymous',
         donor_email VARCHAR(255),
         message TEXT,
