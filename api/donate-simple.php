@@ -121,15 +121,15 @@ try {
     }
     file_put_contents($log_dir . '/donations.log', json_encode($log_entry) . "\n", FILE_APPEND | LOCK_EX);
     
-    // Check if PipraPay returned a payment URL
-    if (isset($result['payment_url']) || isset($result['checkout_url']) || isset($result['url'])) {
-        $payment_url = $result['payment_url'] ?? $result['checkout_url'] ?? $result['url'];
+    // Check if Solveez/PipraPay returned a payment URL
+    if (isset($result['pp_url']) || isset($result['payment_url']) || isset($result['checkout_url']) || isset($result['url'])) {
+        $payment_url = $result['pp_url'] ?? $result['payment_url'] ?? $result['checkout_url'] ?? $result['url'];
         
         echo json_encode([
             'success' => true,
             'message' => 'Donation payment created successfully',
             'payment_url' => $payment_url,
-            'charge_id' => $result['id'] ?? $result['charge_id'] ?? null
+            'charge_id' => $result['pp_id'] ?? $result['id'] ?? $result['charge_id'] ?? null
         ]);
     } else {
         // Log the full response for debugging

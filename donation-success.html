@@ -132,9 +132,9 @@
     </div>
 
     <script>
-        // Get reference ID from URL parameter
+        // Get reference ID from URL parameter (Solveez sends pp_id)
         const urlParams = new URLSearchParams(window.location.search);
-        const referenceId = urlParams.get('reference');
+        const referenceId = urlParams.get('pp_id') || urlParams.get('reference') || urlParams.get('id');
         
         if (referenceId) {
             document.getElementById('referenceInfo').style.display = 'block';
