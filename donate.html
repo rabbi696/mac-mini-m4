@@ -366,7 +366,7 @@
                 try {
                     const formData = new FormData(donationForm);
                     
-                    const response = await fetch('api/donate-simple.php', {
+                    const response = await fetch('api/debug-donation.php', {
                         method: 'POST',
                         body: formData
                     });
