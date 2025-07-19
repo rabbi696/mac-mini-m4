@@ -28,19 +28,24 @@ try {
         throw new Exception('Invalid donation amount');
     }
 
-    // Solveez (PipraPay) API configuration - Production
-    $piprapay_url = 'https://payment.solveez.com/api/create-charge';
+    // PipraPay API configuration - Based on official documentation
+    $piprapay_url = 'https://sandbox.piprapay.com/api/create-charge';
     $api_key = '2108748469687b775b2b6ef1288790031302163742687b775b2b6f3757014442';
     
     // Get current domain for redirect URLs
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
     $domain = $protocol . '://' . $_SERVER['HTTP_HOST'];
     
-    // Prepare the charge data (according to PipraPay documentation)
+    // Prepare the charge data (according to official PipraPay documentation)
     $charge_data = [
         'full_name' => $donor_name,
         'email_mobile' => $donor_email,
         'amount' => (string)$amount,
+        'metadata' => [
+            'donation_type' => 'website_donation',
+            'donor_message' => $message,
+            'site' => 'mac_m4_software'
+        ],
         'redirect_url' => $domain . '/donation-success.html',
         'return_type' => 'GET',
         'cancel_url' => $domain . '/donation-cancel.html',
@@ -60,7 +65,7 @@ try {
         CURLOPT_HTTPHEADER => [
             'Accept: application/json',
             'Content-Type: application/json',
-            'Authorization: Bearer ' . $api_key
+            'mh-piprapay-api-key: ' . $api_key
         ],
         CURLOPT_TIMEOUT => 30,
         CURLOPT_FOLLOWLOCATION => true,
