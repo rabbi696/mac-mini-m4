@@ -1,6 +1,12 @@
 <?php
-// Database setup for donations
+// Initialize database setup for donations and admin system
 require_once '../config/db_config.php';
+
+// Set header for proper access and debugging
+header('Content-Type: text/html; charset=utf-8');
+
+echo "<pre style='background: #1a1a1a; color: #00ff00; padding: 20px; font-family: monospace;'>";
+echo "🚀 Starting Database Setup...\n\n";
 
 try {
     // Create PDO connection
@@ -14,6 +20,34 @@ try {
             PDO::ATTR_EMULATE_PREPARES => false
         ]
     );
+
+    echo "✅ Database connection successful!\n\n";
+
+    // Create admin_users table if not exists
+    $create_admin_table_sql = "
+    CREATE TABLE IF NOT EXISTS admin_users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ";
+
+    $pdo->exec($create_admin_table_sql);
+    echo "✅ Admin users table created successfully!\n";
+
+    // Insert a default admin user
+    $admin_username = 'admin';
+    $admin_password = password_hash('admin123', PASSWORD_DEFAULT);
+
+    $stmt = $pdo->prepare("INSERT IGNORE INTO admin_users (username, password) VALUES (?, ?)");
+    $stmt->execute([$admin_username, $admin_password]);
+
+    if ($stmt->rowCount() > 0) {
+        echo "✅ Default admin user created! (Username: admin, Password: admin123)\n\n";
+    } else {
+        echo "ℹ️  Admin user already exists\n\n";
+    }
 
     // Create donations table
     $create_table_sql = "
@@ -81,4 +115,5 @@ try {
 } catch (PDOException $e) {
     echo "❌ Database setup failed: " . $e->getMessage() . "\n";
 }
+echo "\n🎉 Setup Complete!</pre>";
 ?>
