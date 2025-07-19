@@ -26,16 +26,29 @@ $response = $pipra->createCharge([
 
 echo "<h3>Response:</h3>";
 echo "<pre>";
-print_r($response);
+var_dump($response);
 echo "</pre>";
+
+echo "<h3>Response Analysis:</h3>";
+echo "Response type: " . gettype($response) . "<br>";
+if (is_array($response)) {
+    echo "Response keys: " . implode(', ', array_keys($response)) . "<br>";
+}
 
 if (isset($response['status']) && $response['status']) {
     echo "<p style='color: green;'>✅ Success! Payment URL: " . ($response['pp_url'] ?? 'Not provided') . "</p>";
+} elseif ($response === null) {
+    echo "<p style='color: red;'>❌ Response is NULL - API might be unreachable</p>";
+} elseif (isset($response['status']) && $response['status'] === false) {
+    echo "<p style='color: red;'>❌ API returned status false</p>";
+    if (isset($response['error'])) {
+        echo "<p>Error: " . $response['error'] . "</p>";
+    }
 } else {
-    echo "<p style='color: red;'>❌ Failed!</p>";
-    echo "<p>Error details:</p>";
+    echo "<p style='color: red;'>❌ Failed or unexpected response!</p>";
+    echo "<p>Full response details:</p>";
     echo "<pre>";
-    print_r($response);
+    var_dump($response);
     echo "</pre>";
 }
 

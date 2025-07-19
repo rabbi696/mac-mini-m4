@@ -1,8 +1,4 @@
 <?php
-/**
- * PipraPay PHP Integration Class
- * Official version from PipraPay documentation
- */
 class PipraPay {
     private $api_key;
     private $base_url;
