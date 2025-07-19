@@ -2,9 +2,9 @@
    // db_config.php
    // Database credentials
    define('DB_SERVER', 'localhost');
-   define('DB_USERNAME', 'u273108828_mac'); // Replace with your actual database username
+   define('DB_USERNAME', 'mac_software'); // Replace with your actual database username
    define('DB_PASSWORD', 'MacWithWilson007*'); // Replace with your actual database password
-   define('DB_NAME', 'u273108828_mac');     // Replace with your actual database name
+   define('DB_NAME', 'mac_software');     // Replace with your actual database name
    
    // Attempt to connect to MySQL database (mysqli)
    $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
