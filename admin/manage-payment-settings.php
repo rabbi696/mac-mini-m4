@@ -21,24 +21,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $verify_endpoint = trim($_POST['verify_endpoint']);
     
     try {
-        // Update settings in database
-        $settings = [
-            'piprapay_api_key' => $api_key,
-            'piprapay_base_url' => $base_url,
-            'piprapay_create_endpoint' => $create_endpoint,
-            'piprapay_verify_endpoint' => $verify_endpoint
-        ];
+        // Check if payment_settings table exists and has correct structure before updating
+        $table_exists = false;
+        $has_correct_structure = false;
         
-        $stmt = $pdo->prepare("INSERT INTO payment_settings (setting_name, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)");
-        
-        foreach ($settings as $name => $value) {
-            $stmt->execute([$name, $value]);
+        try {
+            $result = $pdo->query("SHOW TABLES LIKE 'payment_settings'");
+            $table_exists = $result->rowCount() > 0;
+            
+            if ($table_exists) {
+                $columns = $pdo->query("SHOW COLUMNS FROM payment_settings")->fetchAll();
+                $column_names = array_column($columns, 'Field');
+                $has_correct_structure = in_array('setting_name', $column_names) && in_array('setting_value', $column_names);
+            }
+        } catch (PDOException $e) {
+            $table_exists = false;
         }
         
-        // Update configuration class
-        DonationConfig::updateApiSettings($api_key, $base_url, $create_endpoint, $verify_endpoint);
-        
-        $success_message = "Payment settings updated successfully!";
+        if (!$table_exists || !$has_correct_structure) {
+            $error_message = "Cannot update settings: Payment settings table is missing or has incorrect structure. Please <a href='setup-donations.php' style='color: #62a92b;'>run the database setup script</a> first.";
+        } else {
+            // Update settings in database
+            $settings = [
+                'piprapay_api_key' => $api_key,
+                'piprapay_base_url' => $base_url,
+                'piprapay_create_endpoint' => $create_endpoint,
+                'piprapay_verify_endpoint' => $verify_endpoint
+            ];
+            
+            $stmt = $pdo->prepare("INSERT INTO payment_settings (setting_name, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)");
+            
+            foreach ($settings as $name => $value) {
+                $stmt->execute([$name, $value]);
+            }
+            
+            // Update configuration class
+            DonationConfig::updateApiSettings($api_key, $base_url, $create_endpoint, $verify_endpoint);
+            
+            $success_message = "Payment settings updated successfully!";
+        }
         
     } catch (Exception $e) {
         $error_message = "Error updating settings: " . $e->getMessage();
@@ -47,11 +68,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Get current settings
 try {
-    $stmt = $pdo->query("SELECT setting_name, setting_value FROM payment_settings WHERE setting_name LIKE 'piprapay_%'");
-    $current_settings = [];
-    while ($row = $stmt->fetch()) {
-        $current_settings[$row['setting_name']] = $row['setting_value'];
+    // First check if payment_settings table exists and has correct structure
+    $table_exists = false;
+    $has_correct_structure = false;
+    
+    try {
+        $result = $pdo->query("SHOW TABLES LIKE 'payment_settings'");
+        $table_exists = $result->rowCount() > 0;
+        
+        if ($table_exists) {
+            // Check if the table has the correct structure
+            $columns = $pdo->query("SHOW COLUMNS FROM payment_settings")->fetchAll();
+            $column_names = array_column($columns, 'Field');
+            $has_correct_structure = in_array('setting_name', $column_names) && in_array('setting_value', $column_names);
+        }
+    } catch (PDOException $e) {
+        $table_exists = false;
     }
+    
+    $current_settings = [];
+    
+    if ($table_exists && $has_correct_structure) {
+        // Table exists with correct structure, load settings
+        $stmt = $pdo->query("SELECT setting_name, setting_value FROM payment_settings WHERE setting_name LIKE 'piprapay_%'");
+        while ($row = $stmt->fetch()) {
+            $current_settings[$row['setting_name']] = $row['setting_value'];
+        }
+    } else {
+        // Table doesn't exist or has wrong structure
+        if ($table_exists && !$has_correct_structure) {
+            $error_message = "Payment settings table exists but has incorrect structure. Please <a href='setup-donations.php' style='color: #62a92b;'>run the database setup script</a> to fix this issue.";
+        } elseif (!$table_exists) {
+            $error_message = "Payment settings table not found. Please <a href='setup-donations.php' style='color: #62a92b;'>run the database setup script</a> first.";
+        }
+    }
+    
 } catch (Exception $e) {
     $error_message = "Error loading settings: " . $e->getMessage();
     $current_settings = [];
@@ -191,7 +242,7 @@ $current_verify_endpoint = $current_settings['piprapay_verify_endpoint'] ?? Dona
         <?php endif; ?>
 
         <?php if ($error_message): ?>
-            <div class="alert error"><?php echo htmlspecialchars($error_message); ?></div>
+            <div class="alert error"><?php echo $error_message; ?></div>
         <?php endif; ?>
 
         <form method="POST">
