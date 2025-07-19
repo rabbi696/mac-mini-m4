@@ -67,14 +67,25 @@ try {
     // Create charge with PipraPay
     $payment_response = $piprapay->createCharge($payment_data);
     
+    // Log the full response for debugging
+    logError('PipraPay API Response: ' . json_encode($payment_response));
+    
     // Check for cURL errors
     if (isset($payment_response['status']) && $payment_response['status'] === false) {
-        throw new Exception('Payment provider error: ' . ($payment_response['error'] ?? 'Connection error'));
+        $error_msg = $payment_response['error'] ?? 'Connection error';
+        logError('PipraPay cURL Error: ' . $error_msg);
+        throw new Exception('Payment provider error: ' . $error_msg);
     }
     
     // Check if payment creation was successful
     if (!isset($payment_response['success']) || !$payment_response['success']) {
-        $error_msg = $payment_response['message'] ?? $payment_response['error'] ?? 'Unknown error';
+        $error_details = [];
+        if (isset($payment_response['message'])) $error_details[] = $payment_response['message'];
+        if (isset($payment_response['error'])) $error_details[] = $payment_response['error'];
+        if (isset($payment_response['errors'])) $error_details[] = json_encode($payment_response['errors']);
+        
+        $error_msg = !empty($error_details) ? implode(', ', $error_details) : 'Unknown error';
+        logError('PipraPay Payment Creation Failed: ' . $error_msg);
         throw new Exception('Failed to create payment: ' . $error_msg);
     }
     
