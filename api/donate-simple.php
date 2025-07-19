@@ -28,8 +28,8 @@ try {
         throw new Exception('Invalid donation amount');
     }
 
-    // PipraPay API configuration - Based on official documentation
-    $piprapay_url = 'https://sandbox.piprapay.com/api/create-charge';
+    // Solveez (PipraPay) API configuration - Your production endpoints
+    $piprapay_url = 'https://payment.solveez.com/api/create-charge';
     $api_key = '2108748469687b775b2b6ef1288790031302163742687b775b2b6f3757014442';
     
     // Get current domain for redirect URLs
