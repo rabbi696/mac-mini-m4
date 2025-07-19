@@ -77,8 +77,8 @@ try {
         throw new Exception('Payment provider error: ' . $error_msg);
     }
     
-    // Check if payment creation was successful
-    if (!isset($payment_response['success']) || !$payment_response['success']) {
+    // Check if payment creation was successful (using 'status' as per GitHub documentation)
+    if (!isset($payment_response['status']) || !$payment_response['status']) {
         $error_details = [];
         if (isset($payment_response['message'])) $error_details[] = $payment_response['message'];
         if (isset($payment_response['error'])) $error_details[] = $payment_response['error'];

@@ -3,9 +3,9 @@
 class DonationConfig {
     // Piprapay API Configuration
     public static $piprapay_api_key = '1582434874687127321a07912670681911661600709687127321a07e1465171749';
-    public static $piprapay_base_url = 'https://payment.solveez.com';
-    public static $piprapay_create_charge_endpoint = 'https://payment.solveez.com/api/create-charge';
-    public static $piprapay_verify_payment_endpoint = 'https://payment.solveez.com/api/verify-payments';
+    public static $piprapay_base_url = 'https://sandbox.piprapay.com';
+    public static $piprapay_create_charge_endpoint = 'https://sandbox.piprapay.com/api/create-charge';
+    public static $piprapay_verify_payment_endpoint = 'https://sandbox.piprapay.com/api/verify-payments';
     
     // Donation Settings
     public static $currency = 'BDT';
