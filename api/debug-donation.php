@@ -4,6 +4,28 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
+// Log initial request info for debugging
+$initial_debug = [
+    'timestamp' => date('Y-m-d H:i:s'),
+    'request_method' => $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN',
+    'content_type' => $_SERVER['CONTENT_TYPE'] ?? 'UNKNOWN',
+    'query_string' => $_SERVER['QUERY_STRING'] ?? '',
+    'post_data' => $_POST,
+    'raw_input' => file_get_contents('php://input'),
+    'server_info' => [
+        'REQUEST_URI' => $_SERVER['REQUEST_URI'] ?? '',
+        'HTTP_HOST' => $_SERVER['HTTP_HOST'] ?? '',
+        'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'] ?? ''
+    ]
+];
+
+// Save initial debug log
+$log_dir = '../logs';
+if (!is_dir($log_dir)) {
+    mkdir($log_dir, 0755, true);
+}
+file_put_contents($log_dir . '/debug_donations.log', "=== INITIAL REQUEST DEBUG ===\n" . json_encode($initial_debug, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND | LOCK_EX);
+
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
@@ -12,16 +34,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    $error_response = [
+        'success' => false, 
+        'message' => 'Method not allowed. Received: ' . ($_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN'),
+        'debug_info' => 'Check logs/debug_donations.log for request details'
+    ];
+    echo json_encode($error_response);
+    
+    // Log the method error
+    file_put_contents($log_dir . '/debug_donations.log', "=== METHOD ERROR ===\n" . json_encode($error_response, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND | LOCK_EX);
     exit;
 }
 
 try {
-    // Get form data
+    // Get form data from POST or raw input
     $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
     $donor_name = filter_input(INPUT_POST, 'donor_name', FILTER_SANITIZE_STRING) ?? 'Anonymous';
     $donor_email = filter_input(INPUT_POST, 'donor_email', FILTER_VALIDATE_EMAIL) ?? 'anonymous@donor.com';
     $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING) ?? '';
+    
+    // If no POST data, try parsing raw input
+    if (!$amount && !empty($_POST) === false) {
+        $raw_input = file_get_contents('php://input');
+        if (!empty($raw_input)) {
+            // Try to parse as JSON
+            $json_data = json_decode($raw_input, true);
+            if ($json_data) {
+                $amount = floatval($json_data['amount'] ?? 0);
+                $donor_name = $json_data['donor_name'] ?? 'Anonymous';
+                $donor_email = $json_data['donor_email'] ?? 'anonymous@donor.com';
+                $message = $json_data['message'] ?? '';
+            }
+        }
+    }
 
     // Validate required fields
     if (!$amount || $amount < 1) {
