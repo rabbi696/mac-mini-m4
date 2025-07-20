@@ -219,7 +219,7 @@ justify-content: center;
   
         @media (max-width: 768px) {
             header {
-                padding: 0.5rem 0;
+                padding: 0.25rem 0;
             }
             
             .header-container {
@@ -303,17 +303,17 @@ justify-content: center;
         .scroll-text {
             white-space: nowrap;
             display: inline-block;
-            animation: scroll-left-fixed 20s linear infinite;
+            animation: scroll-left-fixed 45s linear infinite;
             width: max-content;
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
         }
 
-        /* Updated animation that starts from right edge of wrapper */
+        /* Updated animation that starts visible and continues scrolling */
         @keyframes scroll-left-fixed {
             0% {
-                transform: translateY(-50%) translateX(100%);
+                transform: translateY(-50%) translateX(0%);
             }
             100% {
                 transform: translateY(-50%) translateX(-100%);
