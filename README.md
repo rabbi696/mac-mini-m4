@@ -7,14 +7,17 @@ The Mac Mini M4 project aims to offer a streamlined and efficient experience for
 Features:
 Software Downloads: A collection of software compatible with the Mac Mini M4.
 
-DMCA Takedown Policy: Information about how users can file a DMCA notice.
+DMCA Takedown Policy: https://mac.golamrabbi.dev/dmca.html
 
-Terms of Service: Guidelines on how users should interact with the website and its content.
+Terms of Service: https://mac.golamrabbi.dev/terms-of-service.html
 
-Privacy Policy: How user data is collected, stored, and used.
+Privacy Policy: https://mac.golamrabbi.dev/privacy-policy.html
 
 License:
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 Contact:
 For any questions or feedback, feel free to contact us through the Contact Us page or directly via email: rabbi@solveez.com
+
+NOTE: 📢 If you can, please consider purchasing the software to support its developers. This software is shared here purely for educational purposes, and I do not host or store it on this site. I found it online and am providing it to you for learning and educational use only.
+
