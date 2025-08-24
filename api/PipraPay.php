@@ -36,7 +36,12 @@ class PipraPay {
                 'accept: application/json',
                 'content-type: application/json',
                 'mh-piprapay-api-key: ' . $this->api_key
-            ]
+            ],
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_FOLLOWLOCATION => true
         ]);
         $res = curl_exec($ch);
         $err = curl_error($ch);

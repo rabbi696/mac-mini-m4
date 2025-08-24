@@ -4,6 +4,12 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
+// Include required files
+require_once '../config/db_config.php';
+require_once '../config/donation_config.php';
+require_once '../utils/maintenance_check.php';
+require_once 'PipraPay.php';
+
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
@@ -26,9 +32,9 @@ try {
     
     // Validate and sanitize input
     $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
-    $donor_name = filter_input(INPUT_POST, 'donor_name', FILTER_SANITIZE_STRING) ?: 'Anonymous';
+    $donor_name = trim(filter_input(INPUT_POST, 'donor_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?: 'Anonymous');
     $donor_email = filter_input(INPUT_POST, 'donor_email', FILTER_VALIDATE_EMAIL) ?: 'anonymous@example.com';
-    $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING) ?: '';
+    $message = trim(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?: '');
     
     // Validate amount
     if (!$amount || $amount < 1) {
@@ -38,7 +44,7 @@ try {
     // Check if API is under maintenance
     $api_status = MaintenanceChecker::checkApiStatus();
     if ($api_status['status'] === 'maintenance') {
-        throw new Exception($api_status['message']);
+        throw new Exception('Payment system is temporarily unavailable. Please try again in a few minutes. (Error: API maintenance)');
     }
     
     // For BDT, use the amount as-is

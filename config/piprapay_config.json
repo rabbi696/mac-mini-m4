@@ -1,0 +1,7 @@
+{
+    "api_key": "199925457168aa0351687ba1834362078106468701568aa0351687bc666452695",
+    "base_url": "https:\/\/payment.webservicebd.com\/api",
+    "create_endpoint": "https:\/\/payment.webservicebd.com\/api\/create-charge",
+    "verify_endpoint": "https:\/\/payment.webservicebd.com\/api\/verify-payments",
+    "updated_at": "2025-08-24 18:08:25"
+}

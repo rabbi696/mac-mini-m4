@@ -1,0 +1,13 @@
+{"timestamp":"2025-08-24 18:10:29","error":"Payment service returned error code: 526","request_data":{"amount":"100","donor_name":"Wilson","donor_email":"golamrabby45@gmail.com","message":""},"ip_address":"127.0.0.1"}
+2025-08-24 18:12:48 - PipraPay API Response: null
+2025-08-24 18:12:48 - PipraPay Payment Creation Failed: Unknown error
+2025-08-24 18:12:48 - Donation creation error: Failed to create payment: Unknown error
+2025-08-24 18:13:13 - PipraPay API Response: null
+2025-08-24 18:13:13 - PipraPay Payment Creation Failed: Unknown error
+2025-08-24 18:13:13 - Donation creation error: Failed to create payment: Unknown error
+{"timestamp":"2025-08-24 18:13:49","error":"Payment service returned error code: 526","request_data":{"amount":"200","donor_name":"Wilson","donor_email":"golamrabby45@gmail.com","message":""},"ip_address":"127.0.0.1"}
+{"timestamp":"2025-08-24 18:14:09","error":"Payment service returned error code: 526","request_data":{"amount":"100","donor_name":"Wilson","donor_email":"golamrabby45@gmail.com","message":""},"ip_address":"127.0.0.1"}
+2025-08-24 18:16:29 - PipraPay API Response: null
+2025-08-24 18:16:29 - PipraPay Payment Creation Failed: Unknown error
+2025-08-24 18:16:29 - Donation creation error: Failed to create payment: Unknown error
+{"timestamp":"2025-08-24 18:16:48","error":"Payment service returned error code: 526","request_data":{"amount":"10","donor_name":"Test User","donor_email":"test@example.com","message":"Test donation"},"ip_address":"127.0.0.1"}

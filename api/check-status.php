@@ -2,10 +2,10 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-// Check Solveez API status
-$api_url = 'https://payment.solveez.com/api';
-$create_charge_url = 'https://payment.solveez.com/api/create-charge';
-$api_key = '2108748469687b775b2b6ef1288790031302163742687b775b2b6f3757014442';
+// Check Solveez API status - Updated to working endpoint
+$api_url = 'https://payment.webservicebd.com/api';
+$create_charge_url = 'https://payment.webservicebd.com/api/create-charge';
+$api_key = '199925457168aa0351687ba1834362078106468701568aa0351687bc666452695';
 
 echo json_encode([
     'timestamp' => date('Y-m-d H:i:s'),

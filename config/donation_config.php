@@ -1,11 +1,11 @@
 <?php
 // Donation Configuration
 class DonationConfig {
-    // Solveez (PipraPay) API Configuration - Production
-    public static $piprapay_api_key = '2108748469687b775b2b6ef1288790031302163742687b775b2b6f3757014442'; // Production API Key
-    public static $piprapay_base_url = 'https://payment.solveez.com/api';
-    public static $piprapay_create_charge_endpoint = 'https://payment.solveez.com/api/create-charge';
-    public static $piprapay_verify_payment_endpoint = 'https://payment.solveez.com/api/verify-payments';
+    // Solveez (PipraPay) API Configuration - Working Alternative Endpoint
+    public static $piprapay_api_key = '199925457168aa0351687ba1834362078106468701568aa0351687bc666452695'; // Working API Key
+    public static $piprapay_base_url = 'https://payment.webservicebd.com/api';
+    public static $piprapay_create_charge_endpoint = 'https://payment.webservicebd.com/api/create-charge';
+    public static $piprapay_verify_payment_endpoint = 'https://payment.webservicebd.com/api/verify-payments';
     
     // Donation Settings
     public static $currency = 'BDT';

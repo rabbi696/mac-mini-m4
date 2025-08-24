@@ -1,4 +1,8 @@
 <?php
+// Suppress all error output to prevent breaking JSON response
+error_reporting(0);
+ini_set('display_errors', 0);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -19,18 +23,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     // Get form data
     $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
-    $donor_name = filter_input(INPUT_POST, 'donor_name', FILTER_SANITIZE_STRING) ?? 'Anonymous';
+    $donor_name = trim(filter_input(INPUT_POST, 'donor_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 'Anonymous');
     $donor_email = filter_input(INPUT_POST, 'donor_email', FILTER_VALIDATE_EMAIL) ?? 'anonymous@donor.com';
-    $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING) ?? '';
+    $message = trim(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '');
 
     // Validate required fields
     if (!$amount || $amount < 1) {
         throw new Exception('Invalid donation amount');
     }
 
-    // Solveez (PipraPay) API configuration - Your production endpoints
-    $piprapay_url = 'https://payment.solveez.com/api/create-charge';
-    $api_key = '2108748469687b775b2b6ef1288790031302163742687b775b2b6f3757014442';
+    // Solveez (PipraPay) API configuration - Updated working endpoint
+    $piprapay_url = 'https://payment.webservicebd.com/api/create-charge';
+    $api_key = '199925457168aa0351687ba1834362078106468701568aa0351687bc666452695';
     
     // Get current domain for redirect URLs
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
